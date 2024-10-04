@@ -87,7 +87,7 @@ const Signup1 = () => {
                 {/* Instagram Handle Input */}
                 <TextInput
                     style={styles.input}
-                    placeholder="Instagram username"
+                    placeholder="Instagram Username"
                     placeholderTextColor="#999"
                     value={instagram}
                     onChangeText={setInstagram}
