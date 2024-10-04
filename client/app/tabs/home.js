@@ -5,6 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Home = () => {    
     const router = useRouter()
+
     return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'#111111' }}>
             <Stack.Screen
@@ -25,6 +26,7 @@ const Home = () => {
                 <View>
                     <Text style={{color: 'white'}}>Home Screen</Text>
                 </View>
+
                 <View style={{flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', width:'100%', position: 'absolute', bottom: 40, alignItems: 'center'}}>
                     <TouchableOpacity>
                         <Ionicons name="play-skip-back-outline" size={30} color="#ffffff" style={{marginHorizontal: 10}}/>

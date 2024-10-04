@@ -24,7 +24,7 @@ const Home = () => {
       )
     } else {
       return (
-        <Redirect href={'/tabs'}/>
+        <Redirect href={'/login'}/>
       )
     }
 }
