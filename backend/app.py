@@ -43,7 +43,7 @@ Session(app)
 def index():
 
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(scope='user-read-currently-playing playlist-modify-private user-top-read',
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope='user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read',
                                                cache_handler=cache_handler,
                                                show_dialog=True)
 
@@ -59,12 +59,15 @@ def index():
 
     # Step 3. Signed in, display data
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    return f'<h2>Hi {spotify.me()["display_name"]}, ' \
-           f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
-           f'<a href="/playlists">my playlists</a> | ' \
-           f'<a href="/currently_playing">currently playing</a> | ' \
-           f'<a href="/current_user_top_tracks">top tracks</a> | ' \
-           f'<a href="/current_user_top_artists">top artists</a> | ' \
+    return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
+            f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
+            f'<a href="/playlists">my playlists</a> | ' \
+            f'<a href="/currently_playing">currently playing</a> | ' \
+            f'<a href="/current_user_top_tracks">top tracks</a> | ' \
+            f'<a href="/current_user_top_artists">top artists</a> | ' \
+            f'<a href="/current_user_saved_albums">saved albums</a> | ' \
+            f'<a href="/current_user_recently_played">recently played</a> | ' \
+            f'<a href="/current_user_following_artists">following artists</a> | ' \
         f'<a href="/current_user">me</a>' \
 
 
@@ -127,6 +130,33 @@ def current_user_top_artists():
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return spotify.current_user_top_artists()
+
+@app.route('/current_user_saved_albums')
+def current_user_saved_albums():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    return spotify.current_user_saved_albums()
+
+@app.route('/current_user_recently_played')
+def current_user_recently_played():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    return spotify.current_user_recently_played()
+
+@app.route('/current_user_following_artists')
+def current_user_following_artists():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    return spotify.current_user_followed_artists()
 
 '''
 Following lines allow application to be run more conveniently with
