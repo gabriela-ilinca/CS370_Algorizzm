@@ -1,0 +1,50 @@
+{
+    "href": "https://api.spotify.com/v1/me/top/artists?offset=0&limit=1&time_range=medium_term",
+    "items": [
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/2LRoIwlKmHjgvigdNGBHNo"
+        },
+        "followers": {
+          "href": null,
+          "total": 14051017
+        },
+        "genres": [
+          "colombian pop",
+          "pop reggaeton",
+          "reggaeton",
+          "reggaeton colombiano",
+          "trap latino",
+          "urbano latino"
+        ],
+        "href": "https://api.spotify.com/v1/artists/2LRoIwlKmHjgvigdNGBHNo",
+        "id": "2LRoIwlKmHjgvigdNGBHNo",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/ab6761610000e5ebe82c62cc8cf019aecfd71ee8",
+            "width": 640
+          },
+          {
+            "height": 320,
+            "url": "https://i.scdn.co/image/ab67616100005174e82c62cc8cf019aecfd71ee8",
+            "width": 320
+          },
+          {
+            "height": 160,
+            "url": "https://i.scdn.co/image/ab6761610000f178e82c62cc8cf019aecfd71ee8",
+            "width": 160
+          }
+        ],
+        "name": "Feid",
+        "popularity": 92,
+        "type": "artist",
+        "uri": "spotify:artist:2LRoIwlKmHjgvigdNGBHNo"
+      }
+    ],
+    "limit": 1,
+    "next": "https://api.spotify.com/v1/me/top/artists?offset=1&limit=1&time_range=medium_term",
+    "offset": 0,
+    "previous": null,
+    "total": 220
+  }
