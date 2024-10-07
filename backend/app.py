@@ -4,9 +4,9 @@ Prerequisites
     pip3 install spotipy Flask Flask-Session
 
     // from your [app settings](https://developer.spotify.com/dashboard/applications)
-    export SPOTIPY_CLIENT_ID="86048bd10ece4b4db37d5243e8e96d4d"
-    export SPOTIPY_CLIENT_SECRET="cffc72a5bd9f44e786fd6d1ea0bbf46b"
-    export SPOTIPY_REDIRECT_URI=http://127.0.0.1:3000 // must contain a port
+    export SPOTIPY_CLIENT_ID="ad0141f89eb449d48ae64db2bec8172a"
+    export SPOTIPY_CLIENT_SECRET="0ac9c574296249d888be47f4d2527dc1"
+    export SPOTIPY_REDIRECT_URI="http://127.0.0.1:8080" // must contain a port
     // SPOTIPY_REDIRECT_URI must be added to your [app settings](https://developer.spotify.com/dashboard/applications)
     OPTIONAL
     // in development environment for debug output
@@ -30,7 +30,7 @@ import spotipy
 
 client_id = "86048bd10ece4b4db37d5243e8e96d4d"
 client_secret = "cffc72a5bd9f44e786fd6d1ea0bbf46b"
-redirect_uri = "http://127.0.0.1:5000"
+redirect_uri = "http://127.0.0.1:8080"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -83,7 +83,27 @@ def playlists():
         return redirect('/')
 
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    return spotify.current_user_playlists()
+    playlist = spotify.current_user_playlists(limit = 1)
+
+    # Extract relevant information from the playlist JSON
+    playlist_name = playlist['items'][0]['name']
+    description = playlist['items'][0]['description']
+    playlist_url = playlist['items'][0]['external_urls']['spotify']
+    image_url = playlist['items'][0]['images'][0]['url']
+    total_tracks = playlist['items'][0]['tracks']['total']
+    playlist_id = playlist['items'][0]['id']
+
+
+    # Print the extracted information
+    print(f"Playlist Name: {playlist_name}")
+    print(f"Description: {description}")
+    print(f"Playlist URL: {playlist_url}")
+    print(f"Image URL: {image_url}")
+    print(f"Total Tracks: {total_tracks}")
+
+    #get first public playlist from user as their first date playlist
+    return {"playlist_name": playlist_name, "description": description, 
+            "playlist_url": playlist_url, "image_url": image_url, "total_tracks": total_tracks}
 
 
 @app.route('/currently_playing')
@@ -95,7 +115,39 @@ def currently_playing():
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     track = spotify.current_user_playing_track()
     if not track is None:
-        return track
+
+        song_name = track['item']['name']
+        print("Song: " + song_name)
+        artists = [artist['name'] for artist in track['item']['artists']]
+        print("Artists: " + ", ".join(artists))
+        image_url = track['item']['album']['images'][0]['url']
+        print("Image: " + image_url)
+        song_link = track['item']['external_urls']['spotify']
+        print("Song Link: " + song_link)
+
+        progress_ms = track['progress_ms']  # progress in milliseconds
+        duration_ms = track['item']['duration_ms']  # total song duration in milliseconds
+        progress_minutes = progress_ms // 60000
+        progress_seconds = (progress_ms % 60000) // 1000
+        duration_minutes = duration_ms // 60000
+        duration_seconds = (duration_ms % 60000) // 1000    
+        progress_time = f"{progress_minutes}:{progress_seconds:02d}"
+        duration_time = f"{duration_minutes}:{duration_seconds:02d}"
+        print(f"Progress: {progress_time} / {duration_time}")
+        progress_string = f"{progress_time} / {duration_time}"
+
+        popularity = track['item']['popularity']
+        print("Popularity (0-100): " + str(popularity))
+        preview_url = track['item'].get('preview_url', "No preview available")
+        print("Preview URL: " + preview_url)
+
+
+        #return dict of song name, artists, and image url
+        return {"song_name": song_name, "artists": artists, "image_url": image_url, 
+                "song_link": song_link, "progress_time": progress_string
+                , "popularity": popularity, "preview_url": preview_url}
+    
+
     return "No track currently playing."
 
 
@@ -110,6 +162,7 @@ def current_user():
     return current_user
 
 #with spotipy, get the current user's top tracks
+#ignore #5 tracks instead of 1
 @app.route('/current_user_top_tracks')
 def current_user_top_tracks():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -117,16 +170,46 @@ def current_user_top_tracks():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    return spotify.current_user_top_tracks()
+    top_tracks = spotify.current_user_top_tracks(limit = 1)
+    track_info = top_tracks['items'][0]
+    album_info = track_info['album']
+    artists_info = track_info['artists']
+
+    extracted_data = {
+    'track_name': track_info['name'],
+    'track_id': track_info['id'],
+    'track_url': track_info['external_urls']['spotify'],
+    'track_popularity': track_info['popularity'],
+    'track_duration': track_info['duration_ms'],
+    'preview_url': track_info['preview_url'],
+    'artist_name': [artist['name'] for artist in artists_info],
+    'artist_id': [artist['id'] for artist in artists_info],
+    'artist_url': [artist['external_urls']['spotify'] for artist in artists_info],
+    'image_url': album_info['images'][0]['url'] 
+}
+    print(extracted_data)
+    return extracted_data
 
 @app.route('/current_user_top_artists')
 def current_user_top_artists():
+    #do top 5 as well here
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    return spotify.current_user_top_artists()
+    top_artists = spotify.current_user_top_artists(limit = 1)
+    artist_info = top_artists['items'][0]
+    artist_data = {
+    'name': artist_info['name'],
+    'id': artist_info['id'],
+    'external_url': artist_info['external_urls']['spotify'],
+    'popularity': artist_info['popularity'],
+    'genres': artist_info['genres'],
+    'image': artist_info['images'][0]['url'] if artist_info['images'] else None  # Using the first (largest) image
+    }
+    print(artist_data)
+    return artist_data
 
 '''
 Following lines allow application to be run more conveniently with
@@ -134,5 +217,5 @@ Following lines allow application to be run more conveniently with
 (Also includes directive to leverage pythons threading capacity.)
 '''
 if __name__ == '__main__':
-    #run threaded on port http://localhost:5000/
-    app.run(threaded=True, port=5000)
+    #run threaded on port http://localhost:8080/
+    app.run(threaded=True, port=8080)

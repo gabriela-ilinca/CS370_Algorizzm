@@ -4,9 +4,9 @@ Prerequisites
     pip3 install spotipy Flask Flask-Session
 
     // from your [app settings](https://developer.spotify.com/dashboard/applications)
-    export SPOTIPY_CLIENT_ID="copy here"
-    export SPOTIPY_CLIENT_SECRET="copy here"
-    export SPOTIPY_REDIRECT_URI='copy here' // must contain a port
+    export SPOTIPY_CLIENT_ID="ad0141f89eb449d48ae64db2bec8172a"
+    export SPOTIPY_CLIENT_SECRET="0ac9c574296249d888be47f4d2527dc1"
+    export SPOTIPY_REDIRECT_URI='http://127.0.0.1:8080' // must contain a port
     // SPOTIPY_REDIRECT_URI must be added to your [app settings](https://developer.spotify.com/dashboard/applications)
     OPTIONAL
     // in development environment for debug output
@@ -27,6 +27,7 @@ import os
 from flask import Flask, session, request, redirect
 from flask_session import Session
 import spotipy
+import json
 
 #client_id = "ad0141f89eb449d48ae64db2bec8172a"
 #client_secret = "0ac9c574296249d888be47f4d2527dc1"
@@ -93,6 +94,12 @@ def currently_playing():
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     track = spotify.current_user_playing_track()
     if not track is None:
+        print("Names:")
+        artists= ""
+        for name in track["item"]["album"]["artists"]:
+            print(name["name"])
+            artists += name["name"] + ", "
+        print("Artists: " + artists)
         return track
     return "No track currently playing."
 
