@@ -2,6 +2,7 @@ import { Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Feed from '../../components/feed';
 
 const Home = () => {    
     const router = useRouter()
@@ -16,18 +17,21 @@ const Home = () => {
                         backgroundColor: '#111111',
                     },
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <Ionicons name="options-outline" size={30} color="#fcb1d6" style={{marginHorizontal: 10}} 
-                        onPress={() => router.push('../filter')}
-                        />
-                    ),
+                    // headerLeft: () => (
+                    //     <Ionicons 
+                    //     name="options-outline" size={30} 
+                    //     color="#fcb1d6" 
+                    //     style={{marginHorizontal: 10}} 
+                    //     onPress={() => router.push('../filter')}
+                    //     />
+                    // ),
                 }}
             />
                 <View>
-                    <Text style={{color: 'white'}}>Home Screen</Text>
+                    <Feed />
                 </View>
 
-                <View style={{flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', width:'100%', position: 'absolute', bottom: 40, alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', width:'100%', position: 'absolute', bottom: 0, alignItems: 'center', backgroundColor: '#111111', height: 100}}>
                     <TouchableOpacity>
                         <Ionicons name="play-skip-back-outline" size={30} color="#ffffff" style={{marginHorizontal: 10}}/>
                     </TouchableOpacity>

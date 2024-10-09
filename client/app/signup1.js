@@ -12,7 +12,7 @@ const Signup1 = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [instagram, setInstagram] = useState('');
+    const [location, setLocation] = useState('');
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor:'#111111' }}>
@@ -87,10 +87,10 @@ const Signup1 = () => {
                 {/* Instagram Handle Input */}
                 <TextInput
                     style={styles.input}
-                    placeholder="Instagram Username"
+                    placeholder="City, State (or whatever location you want)"
                     placeholderTextColor="#999"
-                    value={instagram}
-                    onChangeText={setInstagram}
+                    value={location}
+                    onChangeText={setLocation}
                 />
 
                 {/* Next Button */}
