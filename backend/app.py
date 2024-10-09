@@ -165,7 +165,6 @@ def current_user():
     return current_user
 
 #with spotipy, get the current user's top tracks
-#ignore #5 tracks instead of 1
 @app.route('/current_user_top_tracks')
 def current_user_top_tracks():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -173,25 +172,28 @@ def current_user_top_tracks():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    top_tracks = spotify.current_user_top_tracks(limit = 1)
-    track_info = top_tracks['items'][0]
-    album_info = track_info['album']
-    artists_info = track_info['artists']
+    top_tracks = spotify.current_user_top_tracks(limit = 10)
+    
+    #multiple tracks logic
+    tracks = top_tracks.get("items", [])
+    track_list = []
+    for track in tracks:
+            track_data = {
+            "track_name": track.get("name"),
+            "track_url": track.get("external_urls", {}).get("spotify"),
+            "track_id": track.get("id"),
+            "preview_url": track.get("preview_url"),
+            "artist_ids": [artist.get("id") for artist in track.get("artists", [])],
+            "artist_names": [artist.get("name") for artist in track.get("artists", [])],
+            "duration_ms": track.get("duration_ms"),
+            "popularity": track.get("popularity"),
+            "image_url": track.get("album", {}).get("images", [{}])[0].get("url"),  # Using the first image URL
+            "artist_urls": [artist.get("external_urls", {}).get("spotify") for artist in track.get("artists", [])]
+        }
+            track_list.append(track_data)
 
-    extracted_data = {
-    'track_name': track_info['name'],
-    'track_id': track_info['id'],
-    'track_url': track_info['external_urls']['spotify'],
-    'track_popularity': track_info['popularity'],
-    'track_duration': track_info['duration_ms'],
-    'preview_url': track_info['preview_url'],
-    'artist_name': [artist['name'] for artist in artists_info],
-    'artist_id': [artist['id'] for artist in artists_info],
-    'artist_url': [artist['external_urls']['spotify'] for artist in artists_info],
-    'image_url': album_info['images'][0]['url'] 
-}
-    print(extracted_data)
-    return extracted_data
+
+    return track_list
 
 @app.route('/current_user_top_artists')
 def current_user_top_artists():
