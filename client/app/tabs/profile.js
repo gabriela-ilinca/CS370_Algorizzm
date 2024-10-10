@@ -1,18 +1,33 @@
 import { images } from '../../assets';
 import { Text, View, ScrollView, TouchableOpacity, StyleSheet, Image, Dimensions, SafeAreaView } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter, Stack } from 'expo-router';
 import Carousel from 'react-native-reanimated-carousel';
 import sample from '../../components/sample';
 import { useFonts, Montserrat_400Regular } from '@expo-google-fonts/montserrat';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
 
 //console.log(images.spotify)
 const { width } = Dimensions.get('window');
 
 const Profile = () => {    
     const router = useRouter();
-    const pics = [sample.pic1, sample.pic2, sample.pic3];
+    const [pics, setPics] = useState([sample.pic1, sample.pic2, sample.pic3]);
+
+    const pickImages = async (index) => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsMultipleSelection: false,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const newPics = [...pics];
+            newPics[index] = { uri: result.assets[0].uri }; // Update the specific image
+            setPics(newPics);
+        }
+    };
 
     return (
         <SafeAreaView style={{backgroundColor: '#111111'}}>
@@ -32,7 +47,7 @@ const Profile = () => {
                         name="settings-outline" size={25} 
                         color="#FFF" 
                         style={{marginHorizontal: 20}} 
-                        onPress={() => router.push('../signup1')}
+                        onPress={() => router.push('../settings')}
                         />
                     ),
                 }}
@@ -47,14 +62,14 @@ const Profile = () => {
                         itemWidth={width * 0.9} // Match this to imageContainer width
                         data={pics}
                         scrollAnimationDuration={500}
-                        renderItem={({ item }) => (
+                        renderItem={({ item, index }) => (
                             <View style={styles.imageContainer}>
                                 <Image 
                                     source={item} 
                                     style={styles.uploadedImage} 
                                     resizeMode='cover'
                                 />
-                                <TouchableOpacity style={styles.editButton} >
+                                <TouchableOpacity style={styles.editButton} onPress={() => pickImages(index)}>
                                     <Ionicons name="create-outline" size={30} color="#FFF" />
                                 </TouchableOpacity>
                             </View>
