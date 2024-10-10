@@ -9,6 +9,9 @@ import lebron1 from "./sample/lebron1.jpeg"
 import lebron2 from "./sample/lebron2.jpeg"
 import lebron3 from "./sample/lebron3.jpeg"
 import patrick from "./sample/patrick.jpeg"
+import btr from "./sample/BTR.png"
+import zb from "./sample/Zach_Bryan.png"
+import yt from "./sample/slimeSeason3.png"
 
 
 export default {
@@ -22,5 +25,8 @@ export default {
     lebron1,
     lebron2,
     lebron3,
-    patrick
+    patrick,
+    btr,
+    zb,
+    yt
 };

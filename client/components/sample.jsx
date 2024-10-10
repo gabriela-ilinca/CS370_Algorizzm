@@ -7,21 +7,21 @@ const sample = {
     name: 'Kelsington Park',
     prompt1: {
         question: 'Currently stuck in my head...', //last listened to/currently playing
-        thumbnail: images.patrick,
+        thumbnail: images.btr,
         title: 'Boyfriend',
         artist: 'Big Time Rush',
         preview_link: '',
     },
     prompt2: {
         question: 'Song on repeat...', //choose random from on repeat playlist
-        thumbnail: images.dog1,
+        thumbnail: images.zb,
         title: 'Something in the Orange',
         artist: 'Zach Bryan',
         preview_link: '',
     },
     prompt3: {
         question: 'In 2016, this was my shit...', //choose random from throwback playlist
-        thumbnail: images.dog2,
+        thumbnail: images.yt,
         title: 'Digits',
         artist: 'Young Thug',
         preview_link: '',
