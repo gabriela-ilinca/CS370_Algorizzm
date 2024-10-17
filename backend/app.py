@@ -28,6 +28,10 @@ from flask import Flask, session, request, redirect
 from flask_session import Session
 import spotipy
 from firebase import firebase
+import firebase_admin
+from firebase_admin import credentials
+import json
+
 
 client_id = "86048bd10ece4b4db37d5243e8e96d4d"
 client_secret = "cffc72a5bd9f44e786fd6d1ea0bbf46b"
@@ -40,6 +44,25 @@ app.config['SESSION_FILE_DIR'] = './.flask_session/'
 Session(app)
 
 firebase = firebase.FirebaseApplication('https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/', None)
+
+# Function to load JSON file and return a dictionary
+def load_json(file_name):
+    with open(file_name, 'r') as file:
+        data = json.load(file)
+    return data
+
+json_file = 'backend/db/credentials.json'  # Replace with your JSON file name
+json_dict = load_json(json_file)
+print("hi")
+print(json_dict)
+
+# Initialize the Firebase Admin SDK using the credentials JSON file
+cred = credentials.Certificate(json_file)
+firebase_admin.initialize_app(cred, {
+    "databaseURL": "https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/"
+})
+
+
 
 
 @app.route('/')
@@ -64,6 +87,8 @@ def index():
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
             f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
+            f'<a href="/sign_up">[sign up]<a/> | '  \
+            f'<a href="/blend">blend</a> | ' \
             f'<a href="/playlists">my playlists</a> | ' \
             f'<a href="/currently_playing">currently playing</a> | ' \
             f'<a href="/current_user_top_tracks">top tracks</a> | ' \
@@ -76,6 +101,24 @@ def index():
             f'<a href="/submit">submit</a> | ' \
         f'<a href="/current_user">me</a>' \
 
+@app.route('/sign_up')
+def sign_up():
+    print("sign up")
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    print(spotify.current_user())#prints current user data
+    print("User")
+    print(spotify.user("manu5699ponce"))#prints target user data
+    return spotify.current_user()
+
+@app.route('/blend')
+def blend():
+    #implement
+    return "blend"
+    
 
 
 @app.route('/sign_out')

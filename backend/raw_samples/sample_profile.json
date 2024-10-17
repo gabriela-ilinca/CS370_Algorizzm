@@ -1,57 +1,55 @@
 {
     "id": "0",
-    "name": "Shreya Singh",
+    "name": "John Pork",
+    "username": "johnpork",
+    "link": "https://open.spotify.com/user/johnpork",
+    "email": "johnpork@gmail.com",
     "photos": [
       {
-        "id": "10",
-        "image": "https://www.instagram.com/p/C2rAwvAIDhs/media/?size=l"
+        "id": "1",
+        "image": "https://preview.redd.it/jq2kktmfx9ra1.jpg?auto=webp&s=30e88d8cbca459f9d3b18148a1d6dd6e7fa601bf"
       },
       {
-        "id": "11",
-        "image": "https://www.instagram.com/p/Czc7MTGojOL/media/?size=l"
+        "id": "2",
+        "image": "https://cdn.prod.website-files.com/5d7e8885cad5174a2fcb98d7/5fa839f24f2637b0b9b14c5e_who-is-virtual-influencer-john-pork.jpg"
       },
       {
-        "id": "12",
-        "image": "https://www.instagram.com/p/C1WBQCmoGGg/media/?size=l"
-      },
-      {
-        "id": "13",
-        "image": "https://www.instagram.com/p/CkfLYLvoZdY/media/?size=l"
-      },
-      {
-        "id": "14",
-        "image": "https://www.instagram.com/p/CgyWempo_iI/media/?size=l"
-      },
-      {
-        "id": "15",
-        "image": "https://www.instagram.com/p/CRyLfQrBXLf/media/?size=l"
+        "id": "3",
+        "image": "https://i.scdn.co/image/ab6761610000e5eba4333a997452896eb80bf0e2"
       }
     ],
     "prompts": [
       {
         "id": "1",
-        "prompt": "This year, I really want to",
-        "answer": "Turn Vegan"
+        "prompt": "Most recently played song",
+        "answer": "Patrai Patrai"
       },
       {
         "id": "2",
-        "prompt": "Best travel story",
-        "answer": "Hitchhiking in Germany"
+        "prompt": "Top 5 Songs",
+        "answer": ["Patrai Patrai", "Who You Foolin", "Espresso", "Birds of a Feather", "Guess featuring billie eilish"]
       },
       {
         "id": "3",
-        "prompt": "I go crazy for",
-        "answer": "Pani Puri"
+        "prompt": "Top 5 Artists",
+        "answer": ["Sabrina Carpenter", "Drake", "Charli xcx", "Billie Eilish", "Ariana Grande"]
+      },
+      {
+        "id": "4",
+        "prompt": "Least known artist I listen to",
+        "answer": "O REI DA BATIDINHA"
+      },
+      {
+        "id": "5",
+        "prompt": "Least known song I love",
+        "answer": "Patrai Patrai"
       }
     ],
     "age": 24,
     "type": "straight",
-    "gender": "female",
-    "height": "5' 5\"",
-    "location": "Vasanth Nagar",
-    "occupation": "SDE at Microsoft",
-    "religion": "Hindu",
-    "lookingFor": "Short-term relationship",
-    "native": "Mumbai"
+    "gender": "male",
+    "height": "5' 7\"",
+    "location": "Rizzland",
+    "occupation_school": "Influencer"
   }
   
