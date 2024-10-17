@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-const Signup1 = () => {    
+const Settings = () => {    
     const router = useRouter();
     
     // State to handle input values
@@ -32,7 +32,7 @@ const Signup1 = () => {
                 }}
             />
             <Text style={{color: 'white', fontWeight: 'bold', fontSize: 30, paddingHorizontal:30}}>
-                Just a bit more information...
+                Change settings...
             </Text>
             <ScrollView contentContainerStyle={{ alignItems:'center', marginTop: 10, paddingBottom:350}}>
                 
@@ -67,7 +67,7 @@ const Signup1 = () => {
                 {/* Password Input */}
                 <TextInput
                     style={styles.input}
-                    placeholder="Password"
+                    placeholder="New Password"
                     placeholderTextColor="#999"
                     secureTextEntry
                     value={password}
@@ -77,7 +77,7 @@ const Signup1 = () => {
                 {/* Confirm Password Input */}
                 <TextInput
                     style={styles.input}
-                    placeholder="Confirm Password"
+                    placeholder="Confirm New Password"
                     placeholderTextColor="#999"
                     secureTextEntry
                     value={confirmPassword}
@@ -96,7 +96,7 @@ const Signup1 = () => {
                 {/* Next Button */}
                 <View style={{ flex:1, width:'100%', alignItems: 'center', marginTop: 30 }}>
                     <TouchableOpacity onPress={() => router.push('/signup2')} style={styles.next}>
-                        <Text style={{ textAlign: "center", color: "#FFF" }}>Next</Text>
+                        <Text style={{ textAlign: "center", color: "#FFF" }}>Save</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -124,4 +124,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Signup1;
+export default Settings;
