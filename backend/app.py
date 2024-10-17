@@ -6,7 +6,8 @@ Prerequisites
     // from your [app settings](https://developer.spotify.com/dashboard/applications)
     export SPOTIPY_CLIENT_ID="ad0141f89eb449d48ae64db2bec8172a"
     export SPOTIPY_CLIENT_SECRET="0ac9c574296249d888be47f4d2527dc1"
-    export SPOTIPY_REDIRECT_URI="http://127.0.0.1:8080" // must contain a port
+    export SPOTIPY_REDIRECT_URI="http://127.0.0.1:8080"
+
     // SPOTIPY_REDIRECT_URI must be added to your [app settings](https://developer.spotify.com/dashboard/applications)
     OPTIONAL
     // in development environment for debug output
@@ -73,6 +74,7 @@ def index():
             f'<a href="/current_user_following_artists">following artists</a> | ' \
             f'<a href="/test">test</a> | ' \
             f'<a href="/test2">test2</a> | ' \
+            f'<a href="/submit">submit</a> | ' \
         f'<a href="/current_user">me</a>' \
 
 
@@ -256,6 +258,12 @@ def test2():
   result = firebase.get('/videos', None)
   return str(result)
 
+@app.route('/submit', methods=['GET', 'POST'])
+def submit():
+  #submit user data to User_info
+    firebase.post('/User_info', {'name': 'Kihoon Alan Kang', 'URI': 'hello'})
+    return 'Success'
+
 '''
 Following lines allow application to be run more conveniently with
 `python app.py` (Make sure you're using python3)
@@ -263,4 +271,4 @@ Following lines allow application to be run more conveniently with
 '''
 if __name__ == '__main__':
     #run threaded on port http://localhost:8080/
-    app.run(threaded=True, port=8080)
+    app.run(threaded=True, port=8080, debug=True)
