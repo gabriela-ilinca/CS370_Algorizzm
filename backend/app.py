@@ -27,6 +27,7 @@ import os
 from flask import Flask, session, request, redirect
 from flask_session import Session
 import spotipy
+from firebase import firebase
 
 client_id = "86048bd10ece4b4db37d5243e8e96d4d"
 client_secret = "cffc72a5bd9f44e786fd6d1ea0bbf46b"
@@ -37,6 +38,8 @@ app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
 Session(app)
+
+firebase = firebase.FirebaseApplication('https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/', None)
 
 
 @app.route('/')
@@ -68,6 +71,8 @@ def index():
             f'<a href="/current_user_saved_albums">saved albums</a> | ' \
             f'<a href="/current_user_recently_played">recently played</a> | ' \
             f'<a href="/current_user_following_artists">following artists</a> | ' \
+            f'<a href="/test">test</a> | ' \
+            f'<a href="/test2">test2</a> | ' \
         f'<a href="/current_user">me</a>' \
 
 
@@ -240,6 +245,16 @@ def current_user_following_artists():
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return spotify.current_user_followed_artists()
+
+@app.route('/test')
+def test():
+  result = firebase.get('/language', None)
+  return str(result)
+
+@app.route('/test2')
+def test2():
+  result = firebase.get('/videos', None)
+  return str(result)
 
 '''
 Following lines allow application to be run more conveniently with
