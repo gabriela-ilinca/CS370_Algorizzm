@@ -36,6 +36,7 @@ import json
 client_id = "86048bd10ece4b4db37d5243e8e96d4d"
 client_secret = "cffc72a5bd9f44e786fd6d1ea0bbf46b"
 redirect_uri = "http://127.0.0.1:8080"
+scope = "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -69,7 +70,7 @@ firebase_admin.initialize_app(cred, {
 def index():
 
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(scope='user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read',
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope= "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public",
                                                cache_handler=cache_handler,
                                                show_dialog=True)
 
@@ -103,6 +104,11 @@ def index():
 
 @app.route('/sign_up')
 def sign_up():
+    """ 
+    The sign up method is gonna generate all the needed user data and store it in the database as a profile json
+    We also need a helper method that refreshes user data that changes (mainly spotify based)
+    This method needs to receive demographic data from the frontend sign up page, combine it with spotify data and generate the profile json
+    """
     print("sign up")
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -116,8 +122,25 @@ def sign_up():
 
 @app.route('/blend')
 def blend():
-    #implement
-    return "blend"
+#john pork top 5 sample list
+    pork_5 =  ["spotify:track:4BVL2QLF5QQLT15SpAWMVq", "spotify:track:7KVPsVMOK3NL7subwJ0dZj", "spotify:track:7KVPsVMOK3NL7subwJ0dZj", "spotify:track:6dOtVTDdiauQNBQEDOtlAB", "spotify:track:0IsIY8pfu1yaGkPUD7pkDx"]
+    my_top5 = current_user_top_tracks()
+    my_top5_uris = []
+
+    for i in range(5):
+        my_top5_uris.append(my_top5[i]['song_uris'])
+    
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler, scope = scope)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify.playlist_add_items("2GvcjQdDJYl3iKFGdPAnI1", my_top5_uris)
+    spotify.playlist_add_items("2GvcjQdDJYl3iKFGdPAnI1", pork_5)
+        
+
+
+    return my_top5_uris
     
 
 
@@ -155,7 +178,7 @@ def playlists():
 
     #get first public playlist from user as their first date playlist
     return {"playlist_name": playlist_name, "description": description, 
-            "playlist_url": playlist_url, "image_url": image_url, "total_tracks": total_tracks}
+            "playlist_url": playlist_url, "image_url": image_url, "total_tracks": total_tracks, "playlist_id": playlist_id}
 
 
 @app.route('/currently_playing')
@@ -176,6 +199,7 @@ def currently_playing():
         print("Image: " + image_url)
         song_link = track['item']['external_urls']['spotify']
         print("Song Link: " + song_link)
+        uri = track['context']['uri']
 
         progress_ms = track['progress_ms']  # progress in milliseconds
         duration_ms = track['item']['duration_ms']  # total song duration in milliseconds
@@ -197,7 +221,7 @@ def currently_playing():
         #return dict of song name, artists, and image url
         return {"song_name": song_name, "artists": artists, "image_url": image_url, 
                 "song_link": song_link, "progress_time": progress_string
-                , "popularity": popularity, "preview_url": preview_url}
+                , "popularity": popularity, "preview_url": preview_url, "uri": uri}
     
 
     return "No track currently playing."
@@ -237,6 +261,7 @@ def current_user_top_tracks():
             "duration_ms": track.get("duration_ms"),
             "popularity": track.get("popularity"),
             "image_url": track.get("album", {}).get("images", [{}])[0].get("url"),  # Using the first image URL
+            "song_uris": track.get("uri"), #added
             "artist_urls": [artist.get("external_urls", {}).get("spotify") for artist in track.get("artists", [])]
         }
             track_list.append(track_data)
