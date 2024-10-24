@@ -54,8 +54,7 @@ def load_json(file_name):
 
 json_file = 'backend/db/credentials.json'  # Replace with your JSON file name
 json_dict = load_json(json_file)
-print("hi")
-print(json_dict)
+
 
 # Initialize the Firebase Admin SDK using the credentials JSON file
 cred = credentials.Certificate(json_file)
@@ -97,6 +96,7 @@ def index():
             f'<a href="/current_user_saved_albums">saved albums</a> | ' \
             f'<a href="/current_user_recently_played">recently played</a> | ' \
             f'<a href="/current_user_following_artists">following artists</a> | ' \
+            f'<a href="/generate_spotify_user_profile">generate_spotify_user_profile</a> | ' \
             f'<a href="/test">test</a> | ' \
             f'<a href="/test2">test2</a> | ' \
             f'<a href="/submit">submit</a> | ' \
@@ -109,16 +109,17 @@ def sign_up():
     We also need a helper method that refreshes user data that changes (mainly spotify based)
     This method needs to receive demographic data from the frontend sign up page, combine it with spotify data and generate the profile json
     """
-    print("sign up")
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect('/')
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
-    print(spotify.current_user())#prints current user data
-    print("User")
-    print(spotify.user("manu5699ponce"))#prints target user data
-    return spotify.current_user()
+  
+    return None
+@app.route('/generate_spotify_user_profile')
+def gen_spotify_user_profile():    
+    user = {}
+    user["current_user"] = current_user()
+    user["top_tracks"] = current_user_top_tracks()
+    user["top_artists"] = current_user_top_artists()
+    user["recent_tracks"] = current_user_recently_played()
+    return user
+
 
 @app.route('/blend')
 def blend():
@@ -170,11 +171,11 @@ def playlists():
 
 
     # Print the extracted information
-    print(f"Playlist Name: {playlist_name}")
-    print(f"Description: {description}")
-    print(f"Playlist URL: {playlist_url}")
-    print(f"Image URL: {image_url}")
-    print(f"Total Tracks: {total_tracks}")
+    #print(f"Playlist Name: {playlist_name}")
+    #print(f"Description: {description}")
+    #print(f"Playlist URL: {playlist_url}")
+    #print(f"Image URL: {image_url}")
+    #print(f"Total Tracks: {total_tracks}")
 
     #get first public playlist from user as their first date playlist
     return {"playlist_name": playlist_name, "description": description, 
@@ -192,13 +193,13 @@ def currently_playing():
     if not track is None:
 
         song_name = track['item']['name']
-        print("Song: " + song_name)
+        #print("Song: " + song_name)
         artists = [artist['name'] for artist in track['item']['artists']]
-        print("Artists: " + ", ".join(artists))
+        #print("Artists: " + ", ".join(artists))
         image_url = track['item']['album']['images'][0]['url']
-        print("Image: " + image_url)
+        #print("Image: " + image_url)
         song_link = track['item']['external_urls']['spotify']
-        print("Song Link: " + song_link)
+        #print("Song Link: " + song_link)
         uri = track['context']['uri']
 
         progress_ms = track['progress_ms']  # progress in milliseconds
@@ -209,13 +210,13 @@ def currently_playing():
         duration_seconds = (duration_ms % 60000) // 1000    
         progress_time = f"{progress_minutes}:{progress_seconds:02d}"
         duration_time = f"{duration_minutes}:{duration_seconds:02d}"
-        print(f"Progress: {progress_time} / {duration_time}")
+        #print(f"Progress: {progress_time} / {duration_time}")
         progress_string = f"{progress_time} / {duration_time}"
 
         popularity = track['item']['popularity']
-        print("Popularity (0-100): " + str(popularity))
+        #print("Popularity (0-100): " + str(popularity))
         preview_url = track['item'].get('preview_url', "No preview available")
-        print("Preview URL: " + preview_url)
+        #print("Preview URL: " + preview_url)
 
 
         #return dict of song name, artists, and image url
@@ -287,7 +288,7 @@ def current_user_top_artists():
     'genres': artist_info['genres'],
     'image': artist_info['images'][0]['url'] if artist_info['images'] else None  # Using the first (largest) image
     }
-    print(artist_data)
+    #print(artist_data)
     return artist_data
 
 @app.route('/current_user_saved_albums')
@@ -306,7 +307,20 @@ def current_user_recently_played():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    return spotify.current_user_recently_played()
+    recent_tracks = spotify.current_user_recently_played(limit = 5)
+    recents = []
+    for track in recent_tracks['items']:
+        recents.append({
+            'name': track['track']['name'],
+            "artists": [artist['name'] for artist in track["track"]['album']['artists']],
+            'image': track['track']['album']['images'][0]['url'],
+            "preview_url": track["track"]["preview_url"],
+            "uri": track["track"]['uri'],
+            "popularity": track["track"]['popularity']
+
+        })
+
+    return recents
 
 @app.route('/current_user_following_artists')
 def current_user_following_artists():
