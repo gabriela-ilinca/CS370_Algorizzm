@@ -1,0 +1,307 @@
+{
+    "current_user": {
+      "display_name": "Manu Ponce",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/user/manu5699ponce"
+      },
+      "followers": {
+        "href": null,
+        "total": 65
+      },
+      "href": "https://api.spotify.com/v1/users/manu5699ponce",
+      "id": "manu5699ponce",
+      "images": [
+        {
+          "height": 300,
+          "url": "https://i.scdn.co/image/ab6775700000ee85e62f1c032f05180b982d814e",
+          "width": 300
+        },
+        {
+          "height": 64,
+          "url": "https://i.scdn.co/image/ab67757000003b82e62f1c032f05180b982d814e",
+          "width": 64
+        }
+      ],
+      "type": "user",
+      "uri": "spotify:user:manu5699ponce"
+    },
+    "recent_tracks": [
+      {
+        "artists": [
+          "DJ Jeeh FDC",
+          "MC LCKaiique",
+          "MC Celo BK"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b273c36979fc3cab5ed608c15fdc",
+        "name": "Forte Forte de Lacoste - Pra Começar o Final de Semana",
+        "popularity": 65,
+        "preview_url": "https://p.scdn.co/mp3-preview/12a27a1fee226b20bce0d08430c6095d3f6f5494?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "uri": "spotify:track:5vdQUAFncALEH9EQvyAqIX"
+      },
+      {
+        "artists": [
+          "Rauw Alejandro"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b273f79b1ab5cd74db6a2d7c1fda",
+        "name": "PICARDÍA",
+        "popularity": 64,
+        "preview_url": "https://p.scdn.co/mp3-preview/fcbe89bb9364ae9a692043ba55aa64e7b8b86780?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "uri": "spotify:track:05OnZaYopHpb0z7ktT2FIF"
+      },
+      {
+        "artists": [
+          "Westside Gunn"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b2739ea4de34431e0888683307ca",
+        "name": "Danhausen",
+        "popularity": 37,
+        "preview_url": "https://p.scdn.co/mp3-preview/efa1948f45a244a7455a6c9d84d410325915e8fe?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "uri": "spotify:track:24OisxVU6lSZdhJla4x34U"
+      },
+      {
+        "artists": [
+          "Eladio Carrion"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b27302b1465a8e6b21d3308c18f4",
+        "name": "Sin Frenos",
+        "popularity": 66,
+        "preview_url": "https://p.scdn.co/mp3-preview/27b9d7bec2a07bfb06643f2ad268f6466edb38a2?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "uri": "spotify:track:1b62AO1IzcVr5SOgoguc9o"
+      },
+      {
+        "artists": [
+          "FloyyMenor"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b2735ac29645fcbff315220a4eef",
+        "name": "un star",
+        "popularity": 64,
+        "preview_url": "https://p.scdn.co/mp3-preview/6a146cdfaf76a2408d3197a0da35e494b8e6a5fc?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "uri": "spotify:track:29Bs1Z1RucC3MCgq1c99j9"
+      }
+    ],
+    "top_artists": {
+      "external_url": "https://open.spotify.com/artist/2LRoIwlKmHjgvigdNGBHNo",
+      "genres": [
+        "colombian pop",
+        "pop reggaeton",
+        "reggaeton",
+        "reggaeton colombiano",
+        "trap latino",
+        "urbano latino"
+      ],
+      "id": "2LRoIwlKmHjgvigdNGBHNo",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebe82c62cc8cf019aecfd71ee8",
+      "name": "Feid",
+      "popularity": 92
+    },
+    "top_tracks": [
+      {
+        "artist_ids": [
+          "2LRoIwlKmHjgvigdNGBHNo"
+        ],
+        "artist_names": [
+          "Feid"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/2LRoIwlKmHjgvigdNGBHNo"
+        ],
+        "duration_ms": 178706,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b2731e76d5d8c654a8f5e640392b",
+        "popularity": 66,
+        "preview_url": "https://p.scdn.co/mp3-preview/72d992f7301ff75849349767dc8a2b9ef917c1e6?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:1npr0HhhkrcTOgqWOp76TM",
+        "track_id": "1npr0HhhkrcTOgqWOp76TM",
+        "track_name": "EY CHORY",
+        "track_url": "https://open.spotify.com/track/1npr0HhhkrcTOgqWOp76TM"
+      },
+      {
+        "artist_ids": [
+          "41vcoPejPG3vv8emJ2R5Ox",
+          "7rOlQwf8OuFLFQp4aydjBt"
+        ],
+        "artist_names": [
+          "Pablito Pesadilla",
+          "Paloma Mami"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/41vcoPejPG3vv8emJ2R5Ox",
+          "https://open.spotify.com/artist/7rOlQwf8OuFLFQp4aydjBt"
+        ],
+        "duration_ms": 180280,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b273a3ea07efa2d5d46a1971b84d",
+        "popularity": 44,
+        "preview_url": "https://p.scdn.co/mp3-preview/a64744190e40bd670c5b6d54792ba15681b32177?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:71ZRd9N8f5p1Z4u1vXwdxI",
+        "track_id": "71ZRd9N8f5p1Z4u1vXwdxI",
+        "track_name": "L0JI",
+        "track_url": "https://open.spotify.com/track/71ZRd9N8f5p1Z4u1vXwdxI"
+      },
+      {
+        "artist_ids": [
+          "2IMZYfNi21MGqxopj9fWx8",
+          "7Gi6gjaWy3DxyilpF1a8Is"
+        ],
+        "artist_names": [
+          "Rels B",
+          "Junior H"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/2IMZYfNi21MGqxopj9fWx8",
+          "https://open.spotify.com/artist/7Gi6gjaWy3DxyilpF1a8Is"
+        ],
+        "duration_ms": 223783,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b2736a78a042e38096089d60841a",
+        "popularity": 73,
+        "preview_url": "https://p.scdn.co/mp3-preview/f8db7d054b3baf7184be3ca0d49607d62f457277?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:75qepWUT3FEyPyXQMMMVZm",
+        "track_id": "75qepWUT3FEyPyXQMMMVZm",
+        "track_name": "Un Desperdicio",
+        "track_url": "https://open.spotify.com/track/75qepWUT3FEyPyXQMMMVZm"
+      },
+      {
+        "artist_ids": [
+          "1mcTU81TzQhprhouKaTkpq"
+        ],
+        "artist_names": [
+          "Rauw Alejandro"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/1mcTU81TzQhprhouKaTkpq"
+        ],
+        "duration_ms": 164705,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b273d9525f27b0a9e25b1fa21230",
+        "popularity": 79,
+        "preview_url": "https://p.scdn.co/mp3-preview/3649d51fb25b7e18974e53a00cfa498622daed01?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:1FlL8ycld6uVDDyhV7P5FA",
+        "track_id": "1FlL8ycld6uVDDyhV7P5FA",
+        "track_name": "Cúrame",
+        "track_url": "https://open.spotify.com/track/1FlL8ycld6uVDDyhV7P5FA"
+      },
+      {
+        "artist_ids": [
+          "3qsKSpcV3ncke3hw52JSMB",
+          "0zO8yNnw5GQgutcIyXfGBY"
+        ],
+        "artist_names": [
+          "Young Miko",
+          "ELENA ROSE"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/3qsKSpcV3ncke3hw52JSMB",
+          "https://open.spotify.com/artist/0zO8yNnw5GQgutcIyXfGBY"
+        ],
+        "duration_ms": 198409,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b27310dfb6ef442ace580aa5a2bf",
+        "popularity": 57,
+        "preview_url": "https://p.scdn.co/mp3-preview/1ff3ca97a9c6a1dd65aeed44137a988f1eb9d327?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:73g6RENTgyeOn8vD04F2MT",
+        "track_id": "73g6RENTgyeOn8vD04F2MT",
+        "track_name": "no quiero pelear",
+        "track_url": "https://open.spotify.com/track/73g6RENTgyeOn8vD04F2MT"
+      },
+      {
+        "artist_ids": [
+          "3E12tRURRvPfHz0hAMCFYc",
+          "1mcTU81TzQhprhouKaTkpq"
+        ],
+        "artist_names": [
+          "Omar Courtz",
+          "Rauw Alejandro"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/3E12tRURRvPfHz0hAMCFYc",
+          "https://open.spotify.com/artist/1mcTU81TzQhprhouKaTkpq"
+        ],
+        "duration_ms": 237853,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b273996764071dbd5240eefb2422",
+        "popularity": 73,
+        "preview_url": "https://p.scdn.co/mp3-preview/330cbf97cd5003bda0bdd4636eb86300eba7d6d7?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:7w3G5VXJLLbuaWylG7hvVi",
+        "track_id": "7w3G5VXJLLbuaWylG7hvVi",
+        "track_name": "S E X P L A Y L I S T 1",
+        "track_url": "https://open.spotify.com/track/7w3G5VXJLLbuaWylG7hvVi"
+      },
+      {
+        "artist_ids": [
+          "6nVcHLIgY5pE2YCl8ubca1",
+          "3UTF2no3muGdiFXVujl94i"
+        ],
+        "artist_names": [
+          "JHAYCO",
+          "Kapo"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/6nVcHLIgY5pE2YCl8ubca1",
+          "https://open.spotify.com/artist/3UTF2no3muGdiFXVujl94i"
+        ],
+        "duration_ms": 309280,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b273a6336772f71447521b2f2b7d",
+        "popularity": 78,
+        "preview_url": "https://p.scdn.co/mp3-preview/300ac4f7c963c51c47936a455ddae9fb70414d98?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:1NKUaH2zobKBC8LIcUH0p0",
+        "track_id": "1NKUaH2zobKBC8LIcUH0p0",
+        "track_name": "Passoa",
+        "track_url": "https://open.spotify.com/track/1NKUaH2zobKBC8LIcUH0p0"
+      },
+      {
+        "artist_ids": [
+          "1mcTU81TzQhprhouKaTkpq"
+        ],
+        "artist_names": [
+          "Rauw Alejandro"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/1mcTU81TzQhprhouKaTkpq"
+        ],
+        "duration_ms": 170535,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b273d9525f27b0a9e25b1fa21230",
+        "popularity": 76,
+        "preview_url": "https://p.scdn.co/mp3-preview/62325f38870660801cc5afc1907f3b4d79db721e?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:2CEf2gU5ZJamLXa3NrgAvA",
+        "track_id": "2CEf2gU5ZJamLXa3NrgAvA",
+        "track_name": "Desenfocao'",
+        "track_url": "https://open.spotify.com/track/2CEf2gU5ZJamLXa3NrgAvA"
+      },
+      {
+        "artist_ids": [
+          "3E12tRURRvPfHz0hAMCFYc"
+        ],
+        "artist_names": [
+          "Omar Courtz"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/3E12tRURRvPfHz0hAMCFYc"
+        ],
+        "duration_ms": 173416,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b273996764071dbd5240eefb2422",
+        "popularity": 63,
+        "preview_url": "https://p.scdn.co/mp3-preview/ad9af21d1ac340e8b92e2820b68f277b7b7a3400?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:2LBqFFGI9G5hn136dS4giv",
+        "track_id": "2LBqFFGI9G5hn136dS4giv",
+        "track_name": "S I T E G U S T A N L A S G A T A S",
+        "track_url": "https://open.spotify.com/track/2LBqFFGI9G5hn136dS4giv"
+      },
+      {
+        "artist_ids": [
+          "2LRoIwlKmHjgvigdNGBHNo",
+          "7jAs1uPnpfNmT6e5qtEPxq"
+        ],
+        "artist_names": [
+          "Feid",
+          "ATL Jacob"
+        ],
+        "artist_urls": [
+          "https://open.spotify.com/artist/2LRoIwlKmHjgvigdNGBHNo",
+          "https://open.spotify.com/artist/7jAs1uPnpfNmT6e5qtEPxq"
+        ],
+        "duration_ms": 196800,
+        "image_url": "https://i.scdn.co/image/ab67616d0000b273f1aad814a40ec7419c234242",
+        "popularity": 88,
+        "preview_url": "https://p.scdn.co/mp3-preview/dd316c32a282c0772a7acd9581f41811eb518f05?cid=ad0141f89eb449d48ae64db2bec8172a",
+        "song_uris": "spotify:track:7bywjHOc0wSjGGbj04XbVi",
+        "track_id": "7bywjHOc0wSjGGbj04XbVi",
+        "track_name": "LUNA",
+        "track_url": "https://open.spotify.com/track/7bywjHOc0wSjGGbj04XbVi"
+      }
+    ]
+  }
