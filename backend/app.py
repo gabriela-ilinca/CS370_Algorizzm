@@ -109,8 +109,22 @@ def sign_up():
     We also need a helper method that refreshes user data that changes (mainly spotify based)
     This method needs to receive demographic data from the frontend sign up page, combine it with spotify data and generate the profile json
     """
+    #get user data from spotify
+    user = {}
+    spotify_data = gen_spotify_user_profile()
+    #pull data from signup on frontend
+    #some frontend pulling shit
+    #after u have both sides of data, push a json to firebase
+    #use "id" from current user as UUID when storing
+    #have a way to check for duplicates and update if there is one
+    user["matches"] = []#use ids here for each profile
+
+
+
+
   
     return None
+
 @app.route('/generate_spotify_user_profile')
 def gen_spotify_user_profile():    
     user = {}
