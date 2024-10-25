@@ -12,10 +12,31 @@ const Login = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginStatus, setLoginStatus] = useState(true);
+  const [loginFailed, setLoginFailed] = useState(false) //temporary var; will replace with actual check auth logic
 
-  const handleGoBack = async () => {}
+  const handleLogin = async () => {
+    //ready to send username and password state vars to firebase for auth
+    setLoginFailed(true)
+    if (loginFailed) {
+      setUsername('')
+      setPassword('')
+      setLoginStatus(false)
+    } else {
+      router.push('/tabs')
+    }
+  }
 
-  const handleLogin = async () => {}
+  const handleSpotifyLogin = async () => {
+    //ready to check spotify creds
+    if (loginFailed) {
+      setUsername('')
+      setPassword('')
+      setLoginStatus(false)
+    } else {
+      router.push('/tabs')
+    }
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -40,23 +61,23 @@ const Login = () => {
 
         <View style={styles.container2}>
           <TextInput
-            style={styles.input}
+            style={loginStatus ? styles.input : styles.fail}
             placeholder="Username or Email"
-            placeholderTextColor="#83829A"
+            placeholderTextColor={loginStatus ? "#83829A" : 'red'}
             value={username}
             onChangeText={setUsername}
           />
           <TextInput
-            style={styles.input}
+            style={loginStatus ? styles.input : styles.fail}
             placeholder="Password"
-            placeholderTextColor="#83829A"
+            placeholderTextColor={loginStatus ? "#83829A" : 'red'}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
 
           <View style={{marginTop:20}}>
-            <TouchableOpacity onPress={() => router.push('/tabs')} style={styles.login}>
+            <TouchableOpacity onPress={handleLogin} style={styles.login}>
               <Text style={{ textAlign: "left", color: "#FFF" }}>Log in</Text>
             </TouchableOpacity>
 
@@ -66,7 +87,7 @@ const Login = () => {
               {/* <View style={{height: 1, width: 100, backgroundColor: 'white'}}/> */}
             </View>
            
-            <TouchableOpacity onPress={() => router.push('/tabs')} style={styles.spotify}>
+            <TouchableOpacity onPress={handleSpotifyLogin} style={styles.spotify}>
               <Text style={{ textAlign: "left", color: "#FFF" }}>Sign in with Spotify</Text>
             </TouchableOpacity>
           </View>
@@ -125,6 +146,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     color: '#FFF',
     marginTop: 20,
+  },
+  fail: {
+    // width: 350,
+    // height: 40,
+    // borderRadius: 15,
+    // marginBottom: 10,
+    // paddingHorizontal: 10,
+    // backgroundColor: "#ccc",
+    width: 350,
+    height: 50,
+    backgroundColor: '#222',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    color: '#FFF',
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: 'red'
   },
   login: {
     width: 350,

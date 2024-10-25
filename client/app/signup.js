@@ -7,6 +7,11 @@ import { images } from '../assets';
 const Signup = () => {    
     const router = useRouter()
 
+    const handleSpotifySync = () => {
+        router.push('/signup1')
+        //ready to sync with spotify
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor:'#111111' }}>
             <Stack.Screen
@@ -38,7 +43,7 @@ const Signup = () => {
                 <View style={{flex:1, width:'100%', alignItems: 'center', marginTop: 30 
                     //position: 'absolute', bottom: 100
                     }}>
-                <TouchableOpacity onPress={() => router.push('/signup1')} style={styles.spotify}>
+                <TouchableOpacity onPress={handleSpotifySync} style={styles.spotify}>
                     <Text style={{ textAlign: "left", color: "#FFF" }}>Sync Spotify account</Text>
                 </TouchableOpacity>
                 </View>
