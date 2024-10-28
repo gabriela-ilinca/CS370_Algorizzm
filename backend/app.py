@@ -53,7 +53,7 @@ def load_json(file_name):
         data = json.load(file)
     return data
 
-json_file = 'backend/db/credentials.json'  # Replace with your JSON file name
+json_file = './db/credentials.json'  # Replace with your JSON file name
 json_dict = load_json(json_file)
 
 
