@@ -1,3 +1,4 @@
 #misc
 backend/.env
 backend/db/credentials.json
+backend/env
