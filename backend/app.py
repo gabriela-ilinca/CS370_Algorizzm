@@ -31,6 +31,7 @@ import spotipy
 from firebase import firebase
 import firebase_admin
 from firebase_admin import credentials
+from firebase_admin import db
 import json
 
 
@@ -53,17 +54,11 @@ def load_json(file_name):
         data = json.load(file)
     return data
 
-json_file = './db/credentials.json'  # Replace with your JSON file name
-json_dict = load_json(json_file)
-
-
 # Initialize the Firebase Admin SDK using the credentials JSON file
-cred = credentials.Certificate(json_file)
+cred = credentials.Certificate('./db/credentials.json')
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/"
 })
-
-
 
 
 @app.route('/')
@@ -101,6 +96,8 @@ def index():
             f'<a href="/test">test</a> | ' \
             f'<a href="/test2">test2</a> | ' \
             f'<a href="/submit">submit</a> | ' \
+            f'<a href="/upload_user_info">upload_user_info</a> | ' \
+            f'<a href="/test_get">test_get</a> | ' \
         f'<a href="/current_user">me</a>' \
 
 @app.route('/sign_up')
@@ -119,10 +116,6 @@ def sign_up():
     #use "id" from current user as UUID when storing
     #have a way to check for duplicates and update if there is one
     user["matches"] = []#use ids here for each profile
-
-
-
-
   
     return None
 
@@ -133,6 +126,7 @@ def gen_spotify_user_profile():
     user["top_tracks"] = current_user_top_tracks()
     user["top_artists"] = current_user_top_artists()
     user["recent_tracks"] = current_user_recently_played()
+    
     return user
 
 
@@ -157,8 +151,54 @@ def blend():
 
 
     return my_top5_uris
-    
 
+@app.route('/test_get')
+def test_get():
+    ref = db.reference("/")
+    db.reference("/").update({"language": "python"})
+    return 'Success'
+    
+@app.route('/upload_user_info')
+def upload_user_info():
+    #get current user data
+    user = current_user()
+    id = user['id']
+
+    #check if user exists in database
+    result = firebase.get('/User_info', id)
+    if result is None:
+        firebase.put('/User_info', id, user['display_name'])
+    
+    #under user, add top tracks, top artists, and recently played
+    top_tracks = current_user_top_tracks()
+    recently_played = current_user_recently_played()
+
+    #put top tracks under user id
+    directory = '/User_info/' + id
+    firebase.put(directory, 'top_tracks', top_tracks)
+    firebase.put(directory, 'recently_played', recently_played)
+
+    #get user data from firebase and return
+    return firebase.get('/User_info', id)
+
+def get_matches():
+    #get current user data and make matches directory
+    user = current_user()
+    id = user['id']
+    directory = '/User_info/' + id + '/matches'
+    matches = firebase.get(directory, None)
+    if matches is None or len(matches) == 0:
+        return "No matches found"
+    return matches
+
+def add_matches(match_id):
+    #get current user data and make matches directory
+    user = current_user()
+    id = user['id']
+    directory = '/User_info/' + id + '/matches'
+    firebase.put(directory, match_id, match_id)
+
+    return "Match added"
 
 @app.route('/sign_out')
 def sign_out():
