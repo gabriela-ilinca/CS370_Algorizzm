@@ -1,29 +1,3 @@
-"""
-Prerequisites
-
-    pip3 install spotipy Flask Flask-Session
-
-    // from your [app settings](https://developer.spotify.com/dashboard/applications)
-    export SPOTIPY_CLIENT_ID="ad0141f89eb449d48ae64db2bec8172a"
-    export SPOTIPY_CLIENT_SECRET="0ac9c574296249d888be47f4d2527dc1"
-    export SPOTIPY_REDIRECT_URI="http://127.0.0.1:8080"
-
-    // SPOTIPY_REDIRECT_URI must be added to your [app settings](https://developer.spotify.com/dashboard/applications)
-    OPTIONAL
-    // in development environment for debug output
-    export FLASK_ENV=development
-    // so that you can invoke the app outside the file's directory include
-    export FLASK_APP=/path/to/spotipy/examples/app.py
-
-    // on Windows, use `SET` instead of `export`
-
-Run app.py
-
-    python3 app.py OR python3 -m flask run
-    NOTE: If receiving "port already in use" error, try other ports: 5000, 8090, 8888, etc...
-        (will need to be updated in your Spotify app and SPOTIPY_REDIRECT_URI variable)
-"""
-
 import os
 from flask import Flask, session, request, redirect
 from flask_session import Session
@@ -33,11 +7,9 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 import json
+from dotenv import load_dotenv
 
-
-client_id = "86048bd10ece4b4db37d5243e8e96d4d"
-client_secret = "cffc72a5bd9f44e786fd6d1ea0bbf46b"
-redirect_uri = "http://127.0.0.1:8080"
+load_dotenv()
 scope = "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public"
 
 app = Flask(__name__)
@@ -48,11 +20,48 @@ Session(app)
 
 firebase = firebase.FirebaseApplication('https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/', None)
 
+#load env variables from .env file into variables
+SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
+SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
+SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
+type= os.getenv("type")
+project_id= os.getenv("project_id")
+private_key_id= os.getenv("private_key_id")
+private_key= os.getenv("private_key")
+client_email= os.getenv("client_email")
+client_id= os.getenv("client_id")
+auth_uri= os.getenv("auth_uri")
+token_uri= os.getenv("token_uri")
+auth_provider_x509_cert_url= os.getenv("auth_provider_x509_cert_url")
+client_x509_cert_url= os.getenv("client_x509_cert_url")
+universe_domain= os.getenv("universe_domain")
+#put into a json file
+firebase_data = {
+    "type": type,
+    "project_id": project_id,
+    "private_key_id": private_key_id,
+    "private_key": private_key,
+    "client_email": client_email,
+    "client_id": client_id,
+    "auth_uri": auth_uri,
+    "token_uri": token_uri,
+    "auth_provider_x509_cert_url": auth_provider_x509_cert_url,
+    "client_x509_cert_url": client_x509_cert_url,
+    "universe_domain": universe_domain
+}
+
+
+
 # Function to load JSON file and return a dictionary
 def load_json(file_name):
     with open(file_name, 'r') as file:
         data = json.load(file)
     return data
+
+json_file = './db/credentials.json'  # Replace with your JSON file name
+json_dict = load_json(json_file)
+
+
 
 # Initialize the Firebase Admin SDK using the credentials JSON file
 cred = credentials.Certificate('./db/credentials.json')
@@ -301,7 +310,7 @@ def current_user_top_tracks():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    top_tracks = spotify.current_user_top_tracks(limit = 10)
+    top_tracks = spotify.current_user_top_tracks(limit = 5)
     
     #multiple tracks logic
     tracks = top_tracks.get("items", [])
@@ -333,18 +342,23 @@ def current_user_top_artists():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    top_artists = spotify.current_user_top_artists(limit = 1)
-    artist_info = top_artists['items'][0]
-    artist_data = {
-    'name': artist_info['name'],
-    'id': artist_info['id'],
-    'external_url': artist_info['external_urls']['spotify'],
-    'popularity': artist_info['popularity'],
-    'genres': artist_info['genres'],
-    'image': artist_info['images'][0]['url'] if artist_info['images'] else None  # Using the first (largest) image
+    top_artists = spotify.current_user_top_artists(limit = 5)
+
+    artists_info = []
+
+    for artist_info in top_artists['items']:
+        artist_data = {
+            'name': artist_info['name'],
+            'id': artist_info['id'],
+            'external_url': artist_info['external_urls']['spotify'],
+            'popularity': artist_info['popularity'],
+            'genres': artist_info['genres'],
+            'image': artist_info['images'][0]['url'] if artist_info['images'] else None
     }
-    #print(artist_data)
-    return artist_data
+        artists_info.append(artist_data)
+
+
+    return artists_info
 
 @app.route('/current_user_saved_albums')
 def current_user_saved_albums():

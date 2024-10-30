@@ -9,6 +9,9 @@ const Home = () => {
     const router = useRouter()
 
     //pull user info here
+    const handleLike=()=> {
+        //handle like logic
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'#111111' }}>
@@ -66,7 +69,7 @@ const Home = () => {
                     <TouchableOpacity>
                         <Ionicons name="play-skip-back-outline" size={30} color="#ffffff" style={{marginHorizontal: 10}}/>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleLike}>
                         <Ionicons name="heart-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                     </TouchableOpacity>
                     <TouchableOpacity>
