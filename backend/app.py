@@ -75,13 +75,24 @@ def index():
 
     # Step 3. Signed in, display data
     spotify = spotipy.Spotify(auth_manager=auth_manager)
+
     return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
             f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
             f'<a href="/fetch_user_data">fetch user data</a> | ' \
             f'<a href="/matches">matches</a> | ' \
             f'<a href="/sign_up">[sign up]<a/> | '  \
-            f'<a href="/test_test">test_test</a> | ' \
+            f'<a href="/blend">blend</a> | ' \
+            f'<a href="/playlists">my playlists</a> | ' \
+            f'<a href="/currently_playing">currently playing</a> | ' \
+            f'<a href="/current_user_top_tracks">top tracks</a> | ' \
+            f'<a href="/current_user_top_artists">top artists</a> | ' \
+            f'<a href="/current_user_saved_albums">saved albums</a> | ' \
+            f'<a href="/current_user_recently_played">recently played</a> | ' \
+            f'<a href="/current_user_following_artists">following artists</a> | ' \
+            f'<a href="/generate_spotify_user_profile">generate_spotify_user_profile</a> | ' \
         f'<a href="/current_user">me</a>' \
+
+
 
 @app.route('/sign_up')
 def sign_up():
@@ -326,13 +337,13 @@ def current_user_top_tracks():
 
 @app.route('/current_user_top_artists')
 def current_user_top_artists():
-    #do top 5 as well here
+    #@TODO get the current user's top artists multiple
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    top_artists = spotify.current_user_top_artists(limit = 1)
+    top_artists = spotify.current_user_top_artists(limit = 5)
     artist_info = top_artists['items'][0]
     artist_data = {
     'name': artist_info['name'],
