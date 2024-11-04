@@ -98,7 +98,7 @@ def gen_spotify_user_profile():
 
     #TODO: check if none or len of 0 and remove (null protection)
 
-    
+    #asdfjklasd;jf
     return user
 
 @app.route('/blend')
