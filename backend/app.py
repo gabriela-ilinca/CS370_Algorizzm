@@ -18,7 +18,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
 Session(app)
 
-firebase = firebase.FirebaseApplication('https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/', None)
+firebase = firebase.FirebaseApplication('https://harmonize-cs370-default-rtdb.firebaseio.com/', None)
 
 #load env variables from .env file into variables
 SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
@@ -35,8 +35,8 @@ token_uri= os.getenv("token_uri")
 auth_provider_x509_cert_url= os.getenv("auth_provider_x509_cert_url")
 client_x509_cert_url= os.getenv("client_x509_cert_url")
 universe_domain= os.getenv("universe_domain")
-#put into a json file
-firebase_data = {
+#make a dictionary of the env variables starting w type
+cred_dict = {
     "type": type,
     "project_id": project_id,
     "private_key_id": private_key_id,
@@ -46,29 +46,14 @@ firebase_data = {
     "auth_uri": auth_uri,
     "token_uri": token_uri,
     "auth_provider_x509_cert_url": auth_provider_x509_cert_url,
-    "client_x509_cert_url": client_x509_cert_url,
-    "universe_domain": universe_domain
+    "client_x509_cert_url": client_x509_cert_url
 }
 
-
-
-# Function to load JSON file and return a dictionary
-def load_json(file_name):
-    with open(file_name, 'r') as file:
-        data = json.load(file)
-    return data
-
-json_file = './db/credentials.json'  # Replace with your JSON file name
-json_dict = load_json(json_file)
-
-
-
-# Initialize the Firebase Admin SDK using the credentials JSON file
-cred = credentials.Certificate('./db/credentials.json')
+# Initialize the Firebase Admin SDK using the credentials dict from env variables
+cred = credentials.Certificate(cred_dict)
 firebase_admin.initialize_app(cred, {
-    "databaseURL": "https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/"
+    "databaseURL": "https://harmonize-cs370-default-rtdb.firebaseio.com/"
 })
-
 
 @app.route('/')
 def index():
@@ -90,8 +75,11 @@ def index():
 
     # Step 3. Signed in, display data
     spotify = spotipy.Spotify(auth_manager=auth_manager)
+
     return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
             f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
+            f'<a href="/fetch_user_data">fetch user data</a> | ' \
+            f'<a href="/matches">matches</a> | ' \
             f'<a href="/sign_up">[sign up]<a/> | '  \
             f'<a href="/blend">blend</a> | ' \
             f'<a href="/playlists">my playlists</a> | ' \
@@ -102,12 +90,9 @@ def index():
             f'<a href="/current_user_recently_played">recently played</a> | ' \
             f'<a href="/current_user_following_artists">following artists</a> | ' \
             f'<a href="/generate_spotify_user_profile">generate_spotify_user_profile</a> | ' \
-            f'<a href="/test">test</a> | ' \
-            f'<a href="/test2">test2</a> | ' \
-            f'<a href="/submit">submit</a> | ' \
-            f'<a href="/upload_user_info">upload_user_info</a> | ' \
-            f'<a href="/test_get">test_get</a> | ' \
         f'<a href="/current_user">me</a>' \
+
+
 
 @app.route('/sign_up')
 def sign_up():
@@ -118,26 +103,74 @@ def sign_up():
     """
     #get user data from spotify
     user = {}
-    spotify_data = gen_spotify_user_profile()
+    user["current_user"] = current_user()
+    user["spotify_data"] = gen_spotify_user_profile()
     #pull data from signup on frontend
-    #some frontend pulling shit
-    #after u have both sides of data, push a json to firebase
+    #make a mockup of the data from frontend
+    user["sign_up_data"] = { "Name": "John Pork", "Date of Birth": "01/01/2002", 
+                            "Email": "john.pork@emory.edu", "Password": "password", 
+                            "IG" : "johnpork"}
     #use "id" from current user as UUID when storing
     #have a way to check for duplicates and update if there is one
-    user["matches"] = []#use ids here for each profile
+    user["matches"] = ["31w2orlgi47cga3gk4ueboxkvb74"]
+
+    
+    user_id = user["spotify_data"]['current_user']['id']
+
+    db.reference("/").update({user_id: user})
+
+    return "success"
   
-    return None
+@app.route('/fetch_user_data')
+def fetch_user_data():
+    #get user ID
+    user = current_user()
+    user_id = user['id']
+
+    #get specific user data from database
+    ref = "/"+user_id
+    user_data = db.reference(ref).get()
+
+    return user_data
+
+@app.route('/matches')
+def matches():
+    #get user ID
+    user = current_user()
+    user_id = user['id']
+
+    #get specific user data from database
+    ref = "/"+user_id
+    user_data = db.reference(ref).get()
+
+    matches = user_data["matches"]
+    matches_list = []
+    for i in matches:
+        match_data = fetch_other_user_data(i)
+        matches_list.append(match_data)
+
+    return matches_list
+
+
+def fetch_other_user_data(UUID = "31w2orlgi47cga3gk4ueboxkvb74"):
+    #get specific user data from database
+    ref = "/"+UUID
+    user_data = db.reference(ref).get()
+
+    return user_data
 
 @app.route('/generate_spotify_user_profile')
 def gen_spotify_user_profile():    
     user = {}
+    
     user["current_user"] = current_user()
     user["top_tracks"] = current_user_top_tracks()
     user["top_artists"] = current_user_top_artists()
     user["recent_tracks"] = current_user_recently_played()
-    
-    return user
 
+    #TODO: check if none or len of 0 and remove (null protection)
+
+    return user
 
 @app.route('/blend')
 def blend():
@@ -161,53 +194,21 @@ def blend():
 
     return my_top5_uris
 
-@app.route('/test_get')
-def test_get():
-    ref = db.reference("/")
+@app.route('/test_test')
+def test_test():
+    #get user ID
+    user = current_user()
+    user_id = user['id']
+
+    spotify_data = gen_spotify_user_profile()
+
     db.reference("/").update({"language": "python"})
-    return 'Success'
-    
-@app.route('/upload_user_info')
-def upload_user_info():
-    #get current user data
-    user = current_user()
-    id = user['id']
 
-    #check if user exists in database
-    result = firebase.get('/User_info', id)
-    if result is None:
-        firebase.put('/User_info', id, user['display_name'])
-    
-    #under user, add top tracks, top artists, and recently played
-    top_tracks = current_user_top_tracks()
-    recently_played = current_user_recently_played()
+    #make new directory of user ID
+    db.reference("/").update({user_id: spotify_data})
 
-    #put top tracks under user id
-    directory = '/User_info/' + id
-    firebase.put(directory, 'top_tracks', top_tracks)
-    firebase.put(directory, 'recently_played', recently_played)
+    return "success"
 
-    #get user data from firebase and return
-    return firebase.get('/User_info', id)
-
-def get_matches():
-    #get current user data and make matches directory
-    user = current_user()
-    id = user['id']
-    directory = '/User_info/' + id + '/matches'
-    matches = firebase.get(directory, None)
-    if matches is None or len(matches) == 0:
-        return "No matches found"
-    return matches
-
-def add_matches(match_id):
-    #get current user data and make matches directory
-    user = current_user()
-    id = user['id']
-    directory = '/User_info/' + id + '/matches'
-    firebase.put(directory, match_id, match_id)
-
-    return "Match added"
 
 @app.route('/sign_out')
 def sign_out():
@@ -310,7 +311,7 @@ def current_user_top_tracks():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    top_tracks = spotify.current_user_top_tracks(limit = 5)
+    top_tracks = spotify.current_user_top_tracks(limit = 10)
     
     #multiple tracks logic
     tracks = top_tracks.get("items", [])
@@ -336,29 +337,24 @@ def current_user_top_tracks():
 
 @app.route('/current_user_top_artists')
 def current_user_top_artists():
-    #do top 5 as well here
+    #@TODO get the current user's top artists multiple
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     top_artists = spotify.current_user_top_artists(limit = 5)
-
-    artists_info = []
-
-    for artist_info in top_artists['items']:
-        artist_data = {
-            'name': artist_info['name'],
-            'id': artist_info['id'],
-            'external_url': artist_info['external_urls']['spotify'],
-            'popularity': artist_info['popularity'],
-            'genres': artist_info['genres'],
-            'image': artist_info['images'][0]['url'] if artist_info['images'] else None
+    artist_info = top_artists['items'][0]
+    artist_data = {
+    'name': artist_info['name'],
+    'id': artist_info['id'],
+    'external_url': artist_info['external_urls']['spotify'],
+    'popularity': artist_info['popularity'],
+    'genres': artist_info['genres'],
+    'image': artist_info['images'][0]['url'] if artist_info['images'] else None  # Using the first (largest) image
     }
-        artists_info.append(artist_data)
-
-
-    return artists_info
+    #print(artist_data)
+    return artist_data
 
 @app.route('/current_user_saved_albums')
 def current_user_saved_albums():
@@ -399,22 +395,6 @@ def current_user_following_artists():
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return spotify.current_user_followed_artists()
-
-@app.route('/test')
-def test():
-  result = firebase.get('/language', None)
-  return str(result)
-
-@app.route('/test2')
-def test2():
-  result = firebase.get('/videos', None)
-  return str(result)
-
-@app.route('/submit', methods=['GET', 'POST'])
-def submit():
-  #submit user data to User_info
-    firebase.post('/User_info', {'name': 'Kihoon Alan Kang', 'URI': 'hello'})
-    return 'Success'
 
 '''
 Following lines allow application to be run more conveniently with
