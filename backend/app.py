@@ -1,5 +1,5 @@
 import os
-from flask import Flask, session, request, redirect
+from flask import Flask, session, request, redirect, jsonify
 from flask_session import Session
 import spotipy
 from firebase import firebase
@@ -7,6 +7,7 @@ import firebase_admin
 from firebase_admin import credentials
 import json
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 load_dotenv()
 scope = "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public"
@@ -16,6 +17,7 @@ app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
 Session(app)
+CORS(app)
 
 firebase = firebase.FirebaseApplication('https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/', None)
 
@@ -57,7 +59,7 @@ def load_json(file_name):
         data = json.load(file)
     return data
 
-json_file = './db/credentials.json'  # Replace with your JSON file name
+json_file = r'C:\Users\hoyun\Downloads\Harmonize\CS370_Algorizzm\backend\db\credentials.json'  # Replace with your JSON file name
 json_dict = load_json(json_file)
 
 
@@ -68,7 +70,33 @@ firebase_admin.initialize_app(cred, {
     "databaseURL": "https://algorizzm-backend-b7ec2-default-rtdb.firebaseio.com/"
 })
 
+@app.route('/login')
+def login():
+    """Return the Spotify login URL for the frontend."""
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(
+        scope=scope,
+        cache_handler=cache_handler,
+        show_dialog=True
+    )
+    auth_url = auth_manager.get_authorize_url()
+    return jsonify({"auth_url": auth_url})
 
+@app.route('/callback')
+def callback():
+    """Handle the redirect from Spotify after login."""
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(
+        scope=scope,
+        cache_handler=cache_handler
+    )
+
+    # Check if Spotify sent us a code after user authorization
+    if request.args.get("code"):
+        auth_manager.get_access_token(request.args.get("code"))
+        return redirect('/success')  # Redirect to a success endpoint if needed
+
+    return redirect('/')  # Redirect to the login if authorization fail
 
 
 @app.route('/')

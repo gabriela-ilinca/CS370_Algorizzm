@@ -3,10 +3,9 @@ import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dime
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { images } from '../assets';
+import * as WebBrowser from 'expo-web-browser';
+import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 
-import { firebase_auth } from '../config/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import socket from '../config/socket';
 
 const { width } = Dimensions.get('window');
 const margin = 20;
@@ -14,58 +13,29 @@ const length = width - margin * 2;
 
 const Login = () => {
   const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginStatus, setLoginStatus] = useState(true);
   const [loginFailed, setLoginFailed] = useState(false) //temporary var; will replace with actual check auth logic
-
-  const socketClient = socket;
-  const auth = firebase_auth;
-
-  const handleLogin = async () => {
-    //ready to send username and password state vars to firebase for auth
-
-    try {
-      const response_email = await fetch(`${Constants.expoConfig?.extra?.apiUrl}/api/user/email?username=${username}`);
-      data = await response_email.json();
-      let email = data.email;
-      if (!email) {
-        email = username;
-      }
-
-      const response_firebase = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response_firebase);
-      const user = auth.currentUser;
-      if (user) {
-        console.log("SUCCESS");
-        socketClient.auth = { userID: user.uid };
-        socketClient.connect();
-        router.replace('tabs/');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-
-    // setLoginFailed(true)
-    // if (loginFailed) {
-    //   setUsername('')
-    //   setPassword('')
-    //   setLoginStatus(false)
-    // } else {
-    //   router.push('/tabs')
-    // }
-  }
 
   const handleSpotifyLogin = async () => {
     //ready to check spotify creds
-    if (loginFailed) {
-      setUsername('')
-      setPassword('')
-      setLoginStatus(false)
-    } else {
-      router.push('/tabs')
-    }
+    
+    router.push('/tabs');
+
+    // try {
+    //   // Fetch the Spotify login URL from the backend
+    //   const response = await fetch('http://10.44.166.112:5000/login');
+
+    //   const data = await response.json();
+  
+    //   // Open the URL in the user's web browser
+    //   const result = await WebBrowser.openAuthSessionAsync(data.auth_url, makeRedirectUri());
+  
+    //   if (result.type === 'success') {
+    //     // Handle successful login
+    //     router.push('/tabs');
+    //   }
+    // } catch (error) {
+    //   console.error("Failed to log in with Spotify:", error);
+    // }
   }
 
   return (
@@ -90,7 +60,7 @@ const Login = () => {
         </View>
 
         <View style={styles.container2}>
-          <TextInput
+          {/* <TextInput
             style={loginStatus ? styles.input : styles.fail}
             placeholder="Username or Email"
             placeholderTextColor={loginStatus ? "#83829A" : 'red'}
@@ -104,18 +74,16 @@ const Login = () => {
             secureTextEntry
             value={password}
             onChangeText={setPassword}
-          />
+          /> */}
 
           <View style={{marginTop:20}}>
-            <TouchableOpacity onPress={handleLogin} style={styles.login}>
+            {/* <TouchableOpacity onPress={handleLogin} style={styles.login}>
               <Text style={{ textAlign: "left", color: "#FFF" }}>Log in</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginVertical: 20, alignItems: 'center'}}>
-              {/* <View style={{height: 1, width: 100, backgroundColor: 'white'}}/> */}
+            {/* <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginVertical: 20, alignItems: 'center'}}>
               <Text style={{color:'white'}}>Or</Text>
-              {/* <View style={{height: 1, width: 100, backgroundColor: 'white'}}/> */}
-            </View>
+            </View> */}
            
             <TouchableOpacity onPress={handleSpotifyLogin} style={styles.spotify}>
               <Text style={{ textAlign: "left", color: "#FFF" }}>Sign in with Spotify</Text>
