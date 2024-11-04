@@ -35,9 +35,22 @@ token_uri= os.getenv("token_uri")
 auth_provider_x509_cert_url= os.getenv("auth_provider_x509_cert_url")
 client_x509_cert_url= os.getenv("client_x509_cert_url")
 universe_domain= os.getenv("universe_domain")
+#make a dictionary of the env variables starting w type
+cred_dict = {
+    "type": type,
+    "project_id": project_id,
+    "private_key_id": private_key_id,
+    "private_key": private_key,
+    "client_email": client_email,
+    "client_id": client_id,
+    "auth_uri": auth_uri,
+    "token_uri": token_uri,
+    "auth_provider_x509_cert_url": auth_provider_x509_cert_url,
+    "client_x509_cert_url": client_x509_cert_url
+}
 
-# Initialize the Firebase Admin SDK using the credentials JSON file
-cred = credentials.Certificate('./db/credentials.json')
+# Initialize the Firebase Admin SDK using the credentials dict from env variables
+cred = credentials.Certificate(cred_dict)
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://harmonize-cs370-default-rtdb.firebaseio.com/"
 })
@@ -64,6 +77,8 @@ def index():
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
             f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
+            f'<a href="/fetch_user_data">fetch user data</a> | ' \
+            f'<a href="/matches">matches</a> | ' \
             f'<a href="/sign_up">[sign up]<a/> | '  \
             f'<a href="/test_test">test_test</a> | ' \
         f'<a href="/current_user">me</a>' \
@@ -77,28 +92,73 @@ def sign_up():
     """
     #get user data from spotify
     user = {}
-    spotify_data = gen_spotify_user_profile()
+    user["current_user"] = current_user()
+    user["spotify_data"] = gen_spotify_user_profile()
     #pull data from signup on frontend
-    #some frontend pulling shit
-    #after u have both sides of data, push a json to firebase
+    #make a mockup of the data from frontend
+    user["sign_up_data"] = { "Name": "John Pork", "Date of Birth": "01/01/2002", 
+                            "Email": "john.pork@emory.edu", "Password": "password", 
+                            "IG" : "johnpork"}
     #use "id" from current user as UUID when storing
     #have a way to check for duplicates and update if there is one
-    user["matches"] = []#use ids here for each profile
+    user["matches"] = ["31w2orlgi47cga3gk4ueboxkvb74"]
+
+    
+    user_id = user["spotify_data"]['current_user']['id']
+
+    db.reference("/").update({user_id: user})
+
+    return "success"
   
-    return None
+@app.route('/fetch_user_data')
+def fetch_user_data():
+    #get user ID
+    user = current_user()
+    user_id = user['id']
+
+    #get specific user data from database
+    ref = "/"+user_id
+    user_data = db.reference(ref).get()
+
+    return user_data
+
+@app.route('/matches')
+def matches():
+    #get user ID
+    user = current_user()
+    user_id = user['id']
+
+    #get specific user data from database
+    ref = "/"+user_id
+    user_data = db.reference(ref).get()
+
+    matches = user_data["matches"]
+    matches_list = []
+    for i in matches:
+        match_data = fetch_other_user_data(i)
+        matches_list.append(match_data)
+
+    return matches_list
+
+
+def fetch_other_user_data(UUID = "31w2orlgi47cga3gk4ueboxkvb74"):
+    #get specific user data from database
+    ref = "/"+UUID
+    user_data = db.reference(ref).get()
+
+    return user_data
 
 @app.route('/generate_spotify_user_profile')
 def gen_spotify_user_profile():    
     user = {}
     
     user["current_user"] = current_user()
-    #user["top_tracks"] = current_user_top_tracks()
-    #user["top_artists"] = current_user_top_artists()
+    user["top_tracks"] = current_user_top_tracks()
+    user["top_artists"] = current_user_top_artists()
     user["recent_tracks"] = current_user_recently_played()
 
     #TODO: check if none or len of 0 and remove (null protection)
 
-    #asdfjklasd;jf
     return user
 
 @app.route('/blend')
