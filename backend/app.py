@@ -337,24 +337,28 @@ def current_user_top_tracks():
 
 @app.route('/current_user_top_artists')
 def current_user_top_artists():
-    #@TODO get the current user's top artists multiple
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     top_artists = spotify.current_user_top_artists(limit = 5)
-    artist_info = top_artists['items'][0]
-    artist_data = {
-    'name': artist_info['name'],
-    'id': artist_info['id'],
-    'external_url': artist_info['external_urls']['spotify'],
-    'popularity': artist_info['popularity'],
-    'genres': artist_info['genres'],
-    'image': artist_info['images'][0]['url'] if artist_info['images'] else None  # Using the first (largest) image
+
+    artists_info = []
+
+    for artist_info in top_artists['items']:
+        artist_data = {
+            'name': artist_info['name'],
+            'id': artist_info['id'],
+            'external_url': artist_info['external_urls']['spotify'],
+            'popularity': artist_info['popularity'],
+            'genres': artist_info['genres'],
+            'image': artist_info['images'][0]['url'] if artist_info['images'] else None
     }
-    #print(artist_data)
-    return artist_data
+        artists_info.append(artist_data)
+
+
+    return artists_info
 
 @app.route('/current_user_saved_albums')
 def current_user_saved_albums():
