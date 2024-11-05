@@ -40,7 +40,7 @@ const Feed = (props) => {
             {/* Name */}
             <View style={{ flex: 1, width: width * 0.9, alignItems: 'flex-start', marginTop: -20 }}>
                 <Text style={{ textAlign: "center", color: "#FFF", fontWeight: 'bold', fontSize: 25}}>{props.name}</Text>
-                <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>{props.location}</Text>
+                <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>{props.ig}</Text>
             </View>
 
             {/* Prompt */}

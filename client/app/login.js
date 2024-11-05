@@ -4,10 +4,6 @@ import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { images } from '../assets';
 
-import { firebase_auth } from '../config/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import socket from '../config/socket';
-
 const { width } = Dimensions.get('window');
 const margin = 20;
 const length = width - margin * 2;
@@ -16,56 +12,19 @@ const Login = () => {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loginStatus, setLoginStatus] = useState(true);
-  const [loginFailed, setLoginFailed] = useState(false) //temporary var; will replace with actual check auth logic
 
-  const socketClient = socket;
-  const auth = firebase_auth;
+
 
   const handleLogin = async () => {
     //ready to send username and password state vars to firebase for auth
 
-    try {
-      const response_email = await fetch(`${Constants.expoConfig?.extra?.apiUrl}/api/user/email?username=${username}`);
-      data = await response_email.json();
-      let email = data.email;
-      if (!email) {
-        email = username;
-      }
 
-      const response_firebase = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response_firebase);
-      const user = auth.currentUser;
-      if (user) {
-        console.log("SUCCESS");
-        socketClient.auth = { userID: user.uid };
-        socketClient.connect();
-        router.replace('tabs/');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-
-    // setLoginFailed(true)
-    // if (loginFailed) {
-    //   setUsername('')
-    //   setPassword('')
-    //   setLoginStatus(false)
-    // } else {
-    //   router.push('/tabs')
-    // }
+    router.push('/tabs')
   }
 
   const handleSpotifyLogin = async () => {
     //ready to check spotify creds
-    if (loginFailed) {
-      setUsername('')
-      setPassword('')
-      setLoginStatus(false)
-    } else {
-      router.push('/tabs')
-    }
+    router.push('/tabs')
   }
 
   return (
@@ -91,16 +50,16 @@ const Login = () => {
 
         <View style={styles.container2}>
           <TextInput
-            style={loginStatus ? styles.input : styles.fail}
+            style={styles.input}
             placeholder="Username or Email"
-            placeholderTextColor={loginStatus ? "#83829A" : 'red'}
+            placeholderTextColor="#83829A"
             value={username}
             onChangeText={setUsername}
           />
           <TextInput
-            style={loginStatus ? styles.input : styles.fail}
+            style={styles.input}
             placeholder="Password"
-            placeholderTextColor={loginStatus ? "#83829A" : 'red'}
+            placeholderTextColor="#83829A"
             secureTextEntry
             value={password}
             onChangeText={setPassword}

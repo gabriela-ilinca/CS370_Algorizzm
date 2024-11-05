@@ -80,7 +80,7 @@ const Profile = () => {
                 {/* Name */}
                 <View style={{ flex: 1, width: width * 0.9, alignItems: 'flex-start', marginTop: -20 }}>
                     <Text style={{ textAlign: "center", color: "#FFF", fontWeight: 'bold', fontSize: 25}}>{sample.name}</Text>
-                    <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>Greenville, SC</Text>
+                    <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>{sample.ig}</Text>
                 </View>
 
                 {/* Prompt */}

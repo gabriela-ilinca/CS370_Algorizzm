@@ -39,7 +39,7 @@ const Home = () => {
                     pic2={sample.pic2}
                     pic3={sample.pic3}
                     name={sample.name}
-                    location={sample.location}
+                    ig={sample.ig}
                     prompt1Question={sample.prompt1.question}
                     prompt1Thumbnail={sample.prompt1.thumbnail}
                     prompt1Title={sample.prompt1.title}

@@ -5,7 +5,7 @@ const sample = {
     pic2: images.lebron2,
     pic3: images.lebron3,
     name: 'Kelsington Park',
-    location: 'Greenville, SC',
+    ig: '@kelseyprk',
     prompt1: {
         question: 'Currently stuck in my head...', //last listened to/currently playing
         thumbnail: images.btr,

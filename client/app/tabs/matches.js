@@ -1,132 +1,134 @@
-import { Text, View, ScrollView, Image, Button, SafeAreaView, TouchableOpacity , StyleSheet } from 'react-native';
-import React ,{ useState, useEffect } from 'react';
-import { Tabs,  useRouter } from 'expo-router';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, Text, ScrollView, Image } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons'
+import { router, Stack, useRouter } from 'expo-router';
 import sample from '../../components/sample';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 
-const Tab = createMaterialTopTabNavigator();
+const { width } = Dimensions.get('window');
+const buttonWidth = (width/2);
 
-const handleAccept = (id) => {
+const Matches = () => { 
+  
+  const [activeTab, setActiveTab] = useState('liked me')
+  const likedMe = [sample]
+  const iLiked = [sample]
 
-};
+  const handleTabPress = (tab) => {
+    setActiveTab(tab);
+  };  
+    return (
+      <SafeAreaView style={{ flex: 1, alignItems: 'center', backgroundColor:'#111111' }}>
+        <Stack.Screen
+                options={{ 
+                    headerShown: false,
+                    headerTitle:"",
+                    headerStyle: {
+                        backgroundColor: '#111111',
+                    },
+                    headerShadowVisible: false,
+                }}
+          />
+        <View style={styles.switcherContainer}>
+            <TouchableOpacity style={[styles.switcherButton, activeTab === 'liked me' && styles.activeButton]} onPress={() => handleTabPress('liked me')}>
+              <Text style={{color: '#fff', fontWeight: activeTab === 'liked me' ? 'bold': 'normal'}}>Liked me</Text>
+            </TouchableOpacity>
 
-const handleDecline = (id) => {
+            <TouchableOpacity style={[styles.switcherButton, activeTab === 'I liked' && styles.activeButton]} onPress={() => handleTabPress('I liked')}>
+              <Text style={{color: '#fff', fontWeight: activeTab === 'I liked' ? 'bold': 'normal'}}>I liked</Text>
+            </TouchableOpacity>
+        </View>
+        <ScrollView style={{flex: 1}}>
+        {activeTab === 'liked me' ? (
+          likedMe.map((val, index) => (
+            <TouchableOpacity 
+              key={index} 
+              onPress={() => router.push({ pathname: `/details/${index}`, params: { val: JSON.stringify(val) } })}
+              style={{flex:1, justifyContent: 'center', alignItems: 'center', marginVertical: 15, width: 375}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 50, width: 50, overflow: 'hidden', borderRadius: 5}}>
+                                <Image 
+                                    source={val.pic1}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{val.name}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 2.5, }}>{val.ig}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity onPress={() => router.push({ pathname: `/details/${index}`, params: { val: JSON.stringify(val) } })}>
+                            <Ionicons name="chevron-forward" size={20} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+          ))
+        ) : (
+          iLiked.map((val, index) => (
+            <TouchableOpacity 
+              key={index} 
+              onPress={() => router.push({ pathname: `/details/${index}`, params: { val: JSON.stringify(val) } })}
+              style={{flex:1, justifyContent: 'center', alignItems: 'center', marginVertical: 15, width: 375}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 50, width: 50, overflow: 'hidden', borderRadius: 5}}>
+                                <Image 
+                                    source={val.pic1}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{val.name}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 2.5, }}>{val.ig}</Text>
+                            </View>
+                        </View> 
+                        <TouchableOpacity onPress={() => router.push({ pathname: `/details/${index}`, params: { val: JSON.stringify(val) } })}>
+                            <Ionicons name="chevron-forward" size={20} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+          ))
+        )}
+        </ScrollView>
 
-};
-
-const LikedRequest = ({ user, onAccept, onDecline }) => {
-  return (
-    <View style={styles.likedRequestBox}>
-      <Image source={ sample.pic1 } style={styles.profileImg} />
-      
-      <Text style={{color: '#ffffff', fontWeight: 'bold', fontSize: 17, textAlign: 'left', marginHorizontal: 5}}>{user.name}</Text>
-     
-      <TouchableOpacity style={{position: 'absolute', right: 65}} onPress={() => onDecline(user.id)} >
-        <Ionicons name="close" size={30} color="#ffffff" style={{marginHorizontal: 10}}/>
-      </TouchableOpacity>
-      <TouchableOpacity  style = {{position: 'absolute', right: 10,}} onPress={() => onAccept(user.id)} >
-        <Ionicons name="heart" size={30} color="#fcb1d6" style={{marginHorizontal: 10}}/>
-      </TouchableOpacity>
-      
-      
-    </View>
-  );
-};
-
-const LikedYouScreen = () => (
-  <View style={{flex: 1, backgroundColor: '#111111'}}>
-    <ScrollView contentContainerStyle={{ backgroundColor: '#111111', alignItems:'center', marginTop: 0, paddingBottom:0 }} showsVerticalScrollIndicator={false}>
-      <LikedRequest user={sample} onAccept={handleAccept} onDecline={handleDecline} />    
-    </ScrollView>
-  </View>
-  );
-
-const YouLikedScreen = () => (
-    <View style={styles.screenContainer}>
-      <Text style={styles.screenText}>You Liked Screen</Text>
-    </View>
-  );
-
-const matchesscreen = () => (
-  <Tab.Navigator
-  screenOptions={{
-    headerShown: false,  
-    tabBarStyle: { backgroundColor: '#111111' }, 
-    tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold' , textTransform: 'none',}, 
-    tabBarActiveTintColor: '#fcb1d6',
-    tabBarInactiveTintColor: '#ffffff',
-    tabBarIndicatorStyle: { backgroundColor: '#fcb1d6' }, 
-  }}
-  >
-    <Tab.Screen name="Liked You" component={LikedYouScreen} />
-    <Tab.Screen name="You Liked" component={YouLikedScreen} />
-  </Tab.Navigator>
-);
-
-
-const Matches = () => {
-    
-
-    return  (
-   
-      
-      
-        <Tab.Navigator
-            screenOptions={{
-              headerShown: false,  
-              tabBarStyle: { backgroundColor: '#111111' }, 
-              tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold' , textTransform: 'none',}, 
-              tabBarActiveTintColor: '#fcb1d6',
-              tabBarInactiveTintColor: '#ffffff',
-              tabBarIndicatorStyle: { backgroundColor: '#fcb1d6' }, 
-            }}
-            >
-            <Tab.Screen name="Liked You" component={LikedYouScreen} options = {{headerShown: false}}/>
-            <Tab.Screen name="You Liked" component={YouLikedScreen} options = {{headerShown: false}} />
-        </Tab.Navigator>
-      
-    )
-    
-        
-    
-}
-
+      </SafeAreaView>
+    );
+  };
+  
+  const styles = StyleSheet.create({
+    switcherContainer: {
+      flexDirection: 'row',
+      justifyContent: "space-evenly",
+      height: 50,
+      marginTop: 10
+    },
+    switcherButton: {
+      paddingHorizontal: 16,
+      alignItems: "center",
+      justifyContent: "center",
+      width: buttonWidth
+    },
+    activeButton: {
+      borderBottomWidth: 2,
+      borderBottomColor: '#fff',
+    },
+  });
+  
 export default Matches
-
-const styles = StyleSheet.create({
-
-    screenContainer: {
-        
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#222222',
-      },
-    screenText: {
-        color: '#ffffff',
-        fontSize: 20,
-      },
-    likedRequestBox: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#111111',
-        borderRadius: 8,
-        padding: 15,
-        marginVertical: 10,
-        backgroundColor: '#111111',
-        width: '100%',
-      },
-    profileImg: {
-        width: 60,
-        height: 60,
-        borderRadius: 30, // Circular image
-        marginRight: 15,
-      },
-
-    
-
-    })

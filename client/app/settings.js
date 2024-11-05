@@ -12,7 +12,7 @@ const Settings = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [location, setLocation] = useState('');
+    const [insta, setInsta] = useState('');
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor:'#111111' }}>
@@ -87,15 +87,15 @@ const Settings = () => {
                 {/* Instagram Handle Input */}
                 <TextInput
                     style={styles.input}
-                    placeholder="City, State (or whatever location you want)"
+                    placeholder="Instagram Username"
                     placeholderTextColor="#999"
-                    value={location}
-                    onChangeText={setLocation}
+                    value={insta}
+                    onChangeText={setInsta}
                 />
 
                 {/* Next Button */}
                 <View style={{ flex:1, width:'100%', alignItems: 'center', marginTop: 30 }}>
-                    <TouchableOpacity onPress={() => router.push('/signup2')} style={styles.next}>
+                    <TouchableOpacity onPress={() => router.back()} style={styles.next}>
                         <Text style={{ textAlign: "center", color: "#FFF" }}>Save</Text>
                     </TouchableOpacity>
                 </View>
