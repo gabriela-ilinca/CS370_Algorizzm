@@ -13,7 +13,10 @@ const { width } = Dimensions.get('window');
 
 const Profile = () => {    
     const router = useRouter();
-    const [pics, setPics] = useState([sample.pic1, sample.pic2, sample.pic3]);
+    const user = sample
+
+    
+    const [pics, setPics] = useState([user.pic1, user.pic2, user.pic3]);
 
     const pickImages = async (index) => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -79,13 +82,13 @@ const Profile = () => {
                 
                 {/* Name */}
                 <View style={{ flex: 1, width: width * 0.9, alignItems: 'flex-start', marginTop: -20 }}>
-                    <Text style={{ textAlign: "center", color: "#FFF", fontWeight: 'bold', fontSize: 25}}>{sample.name}</Text>
-                    <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>{sample.ig}</Text>
+                    <Text style={{ textAlign: "center", color: "#FFF", fontWeight: 'bold', fontSize: 25}}>{user.name}</Text>
+                    <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>{user.ig}</Text>
                 </View>
 
                 {/* Prompt */}
                 <View style={styles.promptContainer}>
-                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{sample.prompt1.question}</Text>
+                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{user.prompt1.question}</Text>
                     <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
                             '#333', borderRadius:10, padding: 10}}>
@@ -93,7 +96,7 @@ const Profile = () => {
                                 <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
                                     {/* Album Cover */}
                                     <Image 
-                                        source={sample.prompt1.thumbnail}
+                                        source={user.prompt1.thumbnail}
                                         style={{ height: '100%', width: '100%' }}
                                         resizeMode="cover"
                                     />
@@ -102,11 +105,11 @@ const Profile = () => {
                                     <Text 
                                     numberOfLines={1} 
                                     ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{sample.prompt1.title}</Text>
+                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{user.prompt1.title}</Text>
                                     <Text 
                                     numberOfLines={1} 
                                     ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{sample.prompt1.artist}</Text>
+                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{user.prompt1.artist}</Text>
                                 </View>
                             </View>
                             <TouchableOpacity>
@@ -118,7 +121,7 @@ const Profile = () => {
 
                 {/* Prompt */}
                 <View style={styles.promptContainer}>
-                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{sample.prompt2.question}</Text>
+                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{user.prompt2.question}</Text>
                     <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
                             '#333', borderRadius:10, padding: 10}}>
@@ -126,7 +129,7 @@ const Profile = () => {
                                 <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
                                     {/* Album Cover */}
                                     <Image 
-                                        source={sample.prompt2.thumbnail}
+                                        source={user.prompt2.thumbnail}
                                         style={{ height: '100%', width: '100%' }}
                                         resizeMode="cover"
                                     />
@@ -135,11 +138,11 @@ const Profile = () => {
                                     <Text 
                                     numberOfLines={1} 
                                     ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{sample.prompt2.title}</Text>
+                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{user.prompt2.title}</Text>
                                     <Text 
                                     numberOfLines={1} 
                                     ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{sample.prompt2.artist}</Text>
+                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{user.prompt2.artist}</Text>
                                 </View>
                             </View>
                             <TouchableOpacity>
@@ -151,7 +154,7 @@ const Profile = () => {
 
                 {/* Prompt */}
                 <View style={styles.promptContainer}>
-                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{sample.prompt3.question}</Text>
+                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{user.prompt3.question}</Text>
                     <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
                             '#333', borderRadius:10, padding: 10}}>
@@ -159,7 +162,7 @@ const Profile = () => {
                                 <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
                                     {/* Album Cover */}
                                     <Image 
-                                        source={sample.prompt3.thumbnail}
+                                        source={user.prompt3.thumbnail}
                                         style={{ height: '100%', width: '100%' }}
                                         resizeMode="cover"
                                     />
@@ -168,11 +171,11 @@ const Profile = () => {
                                     <Text 
                                     numberOfLines={1} 
                                     ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{sample.prompt3.title}</Text>
+                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{user.prompt3.title}</Text>
                                     <Text 
                                     numberOfLines={1} 
                                     ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{sample.prompt3.artist}</Text>
+                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{user.prompt3.artist}</Text>
                                 </View>
                             </View>
                             <TouchableOpacity>
@@ -195,31 +198,31 @@ const Profile = () => {
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>1. {sample.top_songs.song1}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>1. {user.top_songs.song1}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>2. {sample.top_songs.song2}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>2. {user.top_songs.song2}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>3. {sample.top_songs.song3}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>3. {user.top_songs.song3}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>4. {sample.top_songs.song4}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>4. {user.top_songs.song4}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>5. {sample.top_songs.song5}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>5. {user.top_songs.song5}
                         </Text>
                     </View>
                 </View>
@@ -237,31 +240,31 @@ const Profile = () => {
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>1. {sample.top_artists.artist1}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>1. {user.top_artists.artist1}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>2. {sample.top_artists.artist2}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>2. {user.top_artists.artist2}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>3. {sample.top_artists.artist3}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>3. {user.top_artists.artist3}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>4. {sample.top_artists.artist4}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>4. {user.top_artists.artist4}
                         </Text>
 
                         <Text 
                         numberOfLines={1} 
                         ellipsizeMode="tail"
-                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>5. {sample.top_artists.artist5}
+                        style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>5. {user.top_artists.artist5}
                         </Text>
                     </View>
                 </View>

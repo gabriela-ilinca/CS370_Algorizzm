@@ -17,8 +17,6 @@ const Login = () => {
 
   const handleLogin = async () => {
     //ready to send username and password state vars to firebase for auth
-
-
     router.push('/tabs')
   }
 

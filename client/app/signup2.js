@@ -11,6 +11,10 @@ const Signup2 = () => {
     // State to store selected images
     const [images, setImages] = useState([]);
 
+    const handlePress = () => {
+        router.push('/tabs')
+    }
+
     const pickImages = async () => {
         if (images.length >= 3) return; // Allow only 3 images
         
@@ -79,7 +83,7 @@ const Signup2 = () => {
 
                 {/* Next Button */}
                 <View style={{ flex:1, width:'100%', alignItems: 'center', marginTop: 30 }}>
-                    <TouchableOpacity onPress={() => router.push('/tabs')} style={styles.next}>
+                    <TouchableOpacity onPress={handlePress} style={styles.next}>
                         <Text style={{ textAlign: "center", color: "#FFF" }}>Let's jam!</Text>
                     </TouchableOpacity>
                 </View>

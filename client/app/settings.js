@@ -14,6 +14,10 @@ const Settings = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [insta, setInsta] = useState('');
 
+    const handleSave = () => {
+        router.back()
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor:'#111111' }}>
             <Stack.Screen
@@ -95,7 +99,7 @@ const Settings = () => {
 
                 {/* Next Button */}
                 <View style={{ flex:1, width:'100%', alignItems: 'center', marginTop: 30 }}>
-                    <TouchableOpacity onPress={() => router.back()} style={styles.next}>
+                    <TouchableOpacity onPress={handleSave} style={styles.next}>
                         <Text style={{ textAlign: "center", color: "#FFF" }}>Save</Text>
                     </TouchableOpacity>
                 </View>
