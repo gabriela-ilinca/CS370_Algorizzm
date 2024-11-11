@@ -8,6 +8,8 @@ from firebase_admin import credentials
 from firebase_admin import db
 import json
 from dotenv import load_dotenv
+import jsonify
+from flask_cors import CORS, cross_origin
 
 load_dotenv()
 scope = "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public"
@@ -16,7 +18,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
-Session(app)
+CORS(app)
 
 firebase = firebase.FirebaseApplication('https://harmonize-cs370-default-rtdb.firebaseio.com/', None)
 
@@ -55,14 +57,38 @@ firebase_admin.initialize_app(cred, {
     "databaseURL": "https://harmonize-cs370-default-rtdb.firebaseio.com/"
 })
 
-@app.route('/')
-def index():
 
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(scope= "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public",
+cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+auth_manager = spotipy.oauth2.SpotifyOAuth(scope= "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public",
                                                cache_handler=cache_handler,
                                                show_dialog=True)
 
+@app.route('/', methods=['GET'])
+@cross_origin()
+def index():
+
+    
+    """if (session and session['user']):
+        data = jsonify(dict(session).get('user')['user_info'])
+        return data
+    
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    user_info = spotify.me()
+    simple_user_info = {
+        "logged_in": True,
+        "user_info": {
+            "display_name": user_info["display_name"],
+            "id": user_info["id"],
+            "uri": user_info["uri"],
+            "profile_url": user_info["external_urls"]["spotify"]
+        }
+    }
+    session['user'] = simple_user_info
+    return "Hello World"
+
+    return jsonify(dict(session).get('user'))"""
+
+    
     if request.args.get("code"):
         # Step 2. Being redirected from Spotify auth page
         auth_manager.get_access_token(request.args.get("code"))
@@ -71,12 +97,40 @@ def index():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         # Step 1. Display sign in link when no token
         auth_url = auth_manager.get_authorize_url()
-        return f'<h2><a href="{auth_url}">Sign in</a></h2>'
-
+        #return f'<h2><a href="{auth_url}">Sign in</a></h2>'
+        #return jsonify({"auth_url": auth_url})
+        return auth_url
     # Step 3. Signed in, display data
     spotify = spotipy.Spotify(auth_manager=auth_manager)
+    user = spotify.current_user()
+    print(user)
 
-    return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
+    #get user data from spotify
+    user_dict = {}
+    user_dict["current_user"] = user
+    print("user_dict")
+    print(user_dict)
+    user_dict["spotify_data"] = gen_spotify_user_profile()
+
+    user_id = user_dict['current_user']['id']
+
+    db.reference("/").update({user_id: user_dict})
+
+    """
+    #pull data from signup on frontend
+    #make a mockup of the data from frontend
+    #use "id" from current user as UUID when storing
+    #have a way to check for duplicates and update if there is one
+    user["matches"] = ["31w2orlgi47cga3gk4ueboxkvb74"]
+
+    
+    user_id = user["spotify_data"]['current_user']['id']
+
+    db.reference("/").update({user_id: user})"""
+    #should update the user data in the database up to this point
+    #return jsonify of user id
+    return user_id
+    """return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
             f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
             f'<a href="/fetch_user_data">fetch user data</a> | ' \
             f'<a href="/matches">matches</a> | ' \
@@ -90,11 +144,41 @@ def index():
             f'<a href="/current_user_recently_played">recently played</a> | ' \
             f'<a href="/current_user_following_artists">following artists</a> | ' \
             f'<a href="/generate_spotify_user_profile">generate_spotify_user_profile</a> | ' \
-        f'<a href="/current_user">me</a>' \
+        f'<a href="/current_user">me</a>' \" """
+        
+
+
+        
+@app.route('/receive_form', methods=['POST'])
+@cross_origin()
+def receive_form():
+    #receive a json with entries: name, dob, insta, location, bio
+    #store in database
+    #return success
+    data = request.json
+    #sign_up()
+    #db.reference("/").update({user_id: user})
+    """cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')"""
+    #send data to db
+    global_user = None
+    if not global_user is None:
+        user_id = global_user['id']
+        print(user_id)
+        db.reference("/").update({user_id: data})
+        print("success")
+        print(data)
+    else:
+        print("user is none")
+        print(data)
+    return "success"
 
 
 
 @app.route('/sign_up')
+@cross_origin()
 def sign_up():
     """ 
     The sign up method is gonna generate all the needed user data and store it in the database as a profile json
@@ -107,9 +191,6 @@ def sign_up():
     user["spotify_data"] = gen_spotify_user_profile()
     #pull data from signup on frontend
     #make a mockup of the data from frontend
-    user["sign_up_data"] = { "Name": "John Pork", "Date of Birth": "01/01/2002", 
-                            "Email": "john.pork@emory.edu", "Password": "password", 
-                            "IG" : "johnpork"}
     #use "id" from current user as UUID when storing
     #have a way to check for duplicates and update if there is one
     user["matches"] = ["31w2orlgi47cga3gk4ueboxkvb74"]
@@ -122,6 +203,7 @@ def sign_up():
     return "success"
   
 @app.route('/fetch_user_data')
+@cross_origin()
 def fetch_user_data():
     #get user ID
     user = current_user()
@@ -131,9 +213,10 @@ def fetch_user_data():
     ref = "/"+user_id
     user_data = db.reference(ref).get()
 
-    return user_data
+    return jsonify(user_data)
 
 @app.route('/matches')
+@cross_origin()
 def matches():
     #get user ID
     user = current_user()
@@ -159,11 +242,11 @@ def fetch_other_user_data(UUID = "31w2orlgi47cga3gk4ueboxkvb74"):
 
     return user_data
 
-@app.route('/generate_spotify_user_profile')
+#@app.route('/generate_spotify_user_profile')
+#@cross_origin()
 def gen_spotify_user_profile():    
     user = {}
     
-    user["current_user"] = current_user()
     user["top_tracks"] = current_user_top_tracks()
     user["top_artists"] = current_user_top_artists()
     user["recent_tracks"] = current_user_recently_played()
@@ -173,6 +256,7 @@ def gen_spotify_user_profile():
     return user
 
 @app.route('/blend')
+@cross_origin()
 def blend():
 #john pork top 5 sample list
     pork_5 =  ["spotify:track:4BVL2QLF5QQLT15SpAWMVq", "spotify:track:7KVPsVMOK3NL7subwJ0dZj", "spotify:track:7KVPsVMOK3NL7subwJ0dZj", "spotify:track:6dOtVTDdiauQNBQEDOtlAB", "spotify:track:0IsIY8pfu1yaGkPUD7pkDx"]
@@ -195,6 +279,7 @@ def blend():
     return my_top5_uris
 
 @app.route('/test_test')
+@cross_origin()
 def test_test():
     #get user ID
     user = current_user()
@@ -211,12 +296,14 @@ def test_test():
 
 
 @app.route('/sign_out')
+@cross_origin()
 def sign_out():
     session.pop("token_info", None)
     return redirect('/')
 
 
 @app.route('/playlists')
+@cross_origin()
 def playlists():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -248,6 +335,7 @@ def playlists():
 
 
 @app.route('/currently_playing')
+@cross_origin()
 def currently_playing():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -294,6 +382,7 @@ def currently_playing():
 
 
 @app.route('/current_user')
+@cross_origin()
 def current_user():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -304,7 +393,8 @@ def current_user():
     return current_user
 
 #with spotipy, get the current user's top tracks
-@app.route('/current_user_top_tracks')
+#@app.route('/current_user_top_tracks')
+#@cross_origin()
 def current_user_top_tracks():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -335,7 +425,8 @@ def current_user_top_tracks():
 
     return track_list
 
-@app.route('/current_user_top_artists')
+#@app.route('/current_user_top_artists')
+#@cross_origin()
 def current_user_top_artists():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -361,6 +452,7 @@ def current_user_top_artists():
     return artists_info
 
 @app.route('/current_user_saved_albums')
+@cross_origin()
 def current_user_saved_albums():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -369,7 +461,8 @@ def current_user_saved_albums():
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return spotify.current_user_saved_albums()
 
-@app.route('/current_user_recently_played')
+#@app.route('/current_user_recently_played')
+#@cross_origin()
 def current_user_recently_played():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -392,6 +485,7 @@ def current_user_recently_played():
     return recents
 
 @app.route('/current_user_following_artists')
+@cross_origin()
 def current_user_following_artists():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
