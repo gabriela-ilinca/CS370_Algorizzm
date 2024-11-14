@@ -4,3 +4,4 @@ backend/db/credentials.json
 backend/env
 .flask_session/79ecad8222a82fe7c5f26c2a8a1c2d77
 .flask_session/2029240f6d1128be89ddc32729463129
+node_modules

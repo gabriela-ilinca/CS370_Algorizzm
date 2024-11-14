@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "expo": "~52.0.0",
+    "expo-router": "~3.5.24",
+    "expo-splash-screen": "^0.27.7",
+    "react-native-webview": "^13.8.6"
+  }
+}
