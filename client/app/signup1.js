@@ -1,7 +1,8 @@
-import { Text, View, SafeAreaView, TouchableOpacity, TextInput, StyleSheet, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import React, { useState } from 'react';
+import { Text, View, SafeAreaView, TouchableOpacity, TextInput, StyleSheet, ScrollView, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 const Signup1 = () => {    
     const router = useRouter();
@@ -9,14 +10,47 @@ const Signup1 = () => {
     // State to handle input values
     const [name, setName] = useState('');
     const [dob, setDob] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [insta, setInsta] = useState('');
+    const [location, setLocation] = useState('');
+    const [bio, setBio] = useState('');
 
-    const handleNext = () => {
-        router.push('/signup2')
-    }
+
+    const handleNext = async () => {
+        const data = {
+            name: name,
+            dob: dob,
+            insta: insta,
+            location: location,
+            bio: bio
+          };
+          try {
+            // Make a POST request to your Flask backend
+            const response = await fetch('http://127.0.0.1:8080/receive_form', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+      
+            if (response.ok) {
+              const jsonResponse = await response.json();
+              Alert.alert('Success', jsonResponse.message);
+            } else {
+              Alert.alert('Error', 'Something went wrong. Please try again.');
+            }
+          } catch (error) {
+            Alert.alert('Error', error.message);
+          }
+
+
+    };
+
+
+
+    
+
+
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -56,52 +90,42 @@ const Signup1 = () => {
                     placeholder="Date of Birth (MM/DD/YYYY)"
                     placeholderTextColor="#999"
                     value={dob}
-                    maxLength={8}
+                    maxLength={10}
                     textContentType='birthdate'
                     keyboardType='decimal-pad'
                     onChangeText={setDob}
                 />
 
-                {/* Email Input */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor="#999"
-                    keyboardType="email-address"
-                    textContentType='emailAddress'
-                    value={email}
-                    onChangeText={setEmail}
-                />
-
-                {/* Password Input */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    placeholderTextColor="#999"
-                    secureTextEntry
-                    textContentType='password'
-                    value={password}
-                    onChangeText={setPassword}
-                />
-
-                {/* Confirm Password Input */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Confirm Password"
-                    placeholderTextColor="#999"
-                    secureTextEntry
-                    textContentType='password'
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                />
-
-                {/* Address */}
+                
+                {/* IG */}
                 <TextInput
                     style={styles.input}
                     placeholder="Instagram Username"
                     placeholderTextColor="#999"
                     value={insta}
                     onChangeText={setInsta}
+                />
+
+                {/*Location */}
+                 <TextInput
+                    style={styles.input}
+                    placeholder="City, State"
+                    placeholderTextColor="#999"
+                    value={location}
+                    maxLength={30}
+                    textContentType='location'
+                    onChangeText={setLocation}
+                />
+
+                {/*Bio*/}
+                <TextInput
+                    style={styles.input}
+                    placeholder="Introduce yourself! (600 characters max)"
+                    placeholderTextColor="#999"
+                    value={bio}
+                    maxLength={600}
+                    textContentType='none'
+                    onChangeText={setBio}
                 />
 
                 {/* Next Button */}

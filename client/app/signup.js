@@ -1,16 +1,48 @@
-import { Text, View, SafeAreaView, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import React from 'react';
+import { Text, View, SafeAreaView, TouchableOpacity, Image, StyleSheet, Linking } from 'react-native';
+import React, { useState, useEffect }  from 'react';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { images } from '../assets';
+import axios from 'axios';
 
 const Signup = () => {    
     const router = useRouter()
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [userData, setUserData] = useState(null);
+    //const [username, setUsername] = useState(null);
 
-    const handleSpotifySync = () => {
-        router.push('/signup1')
-        //ready to sync with spotify
-    }
+    const handleSpotifySync = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8080', {
+        headers: {
+            'Cache-Control': 'no-cache',                
+        }}); // Update URL if needed
+      setUserData(response.data);
+      console.log('Got Response:', response.data);
+      Linking.openURL(response.data)
+      /*
+      //await 10s
+        await new Promise(resolve => setTimeout(resolve, 10000));
+        setLoggedIn(true);
+        //get user data from same url
+        const username = await axios.get('http://127.0.0.1:8080', {
+            headers: {
+                'Cache-Control': 'no-cache',                
+            }}); // Update URL if needed
+        setUsername(username.data);
+        console.log('Got Response:', username.data);
+        */
+
+    } catch (error) {
+        console.error('Error logging in:', error);
+      }
+    //send them to singup 1
+    router.push('/signup1')
+
+    };
+
+    
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor:'#111111' }}>
