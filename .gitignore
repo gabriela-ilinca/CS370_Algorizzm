@@ -4,6 +4,7 @@ backend/db/credentials.json
 backend/env
 .flask_session/79ecad8222a82fe7c5f26c2a8a1c2d77
 .flask_session/2029240f6d1128be89ddc32729463129
+node_modules
 .flask_session/045527e9fb51864a4bfdd933daeee731
 backend/.env
 client/.flask_session/8d7cdbd940f82275571eac9e15dc3a15
