@@ -19,7 +19,7 @@ State management: App state is handled using Redux for efficient global state ha
 - Redux: For managing global states across the app.
 ## Backend:
 - Spotify API (Spotipy): For retrieving user data from Spotify, such as favorite songs, playlists, and top artists.
-- MongoDB: For storing user profiles, preferences, and match data.
+- FireBase: For storing user profiles, preferences, and match data.
 ## Backend Libraries:
 - Spotipy: A lightweight Python library for accessing the Spotify Web API.
 
