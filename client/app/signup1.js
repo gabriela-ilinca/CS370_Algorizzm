@@ -3,8 +3,19 @@ import React, { useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+//firebase stuff
+import socket from '../config/socket'
+import {firebase_auth} from '../config/firebase'
+import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+
+
 const Signup1 = () => {    
     const router = useRouter();
+    
+
+    //firebase stuff
+    const auth = firebase_auth;
+    const socketClient = socket;
     
     // State to handle input values
     const [name, setName] = useState('');
@@ -14,9 +25,61 @@ const Signup1 = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [insta, setInsta] = useState('');
 
-    const handleNext = () => {
+    //edited to handle firebase calls
+    const handleNext =  async () => {
+        await handleAuth();
+        const user = auth.currentUser;
+        const uid = user.uid;
+        const body = {
+            id: uid,
+            name: name,
+            email: email,
+            password: password,
+            insta: insta
+        }
+
+        try {
+            const response = await fetch(`${Constants.expoConfig?.extra?.apiUrl}/api/user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+            })
+  
+            if (!response.ok) {
+            throw new Error('Error: ' + response.status);
+            }
+            const result = await response.json();
+            console.log('Success:', result);
+  
+  
+            if (user) {
+              console.log("SUCCESS");
+              socketClient.auth = { userID: user.uid };
+              socketClient.connect();
+              router.push('/signup2')
+            }
+  
+  
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
         router.push('/signup2')
     }
+
+
+    const handleAuth = async () => {
+        try {
+            const response = await createUserWithEmailAndPassword(auth, email, password);
+            console.log(response);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
