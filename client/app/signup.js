@@ -14,14 +14,31 @@ const Signup = () => {
     const handleSpotifySync = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8080', {
-        headers: {
-            'Cache-Control': 'no-cache',                
-        }}); // Update URL if needed
+        withCredentials: true,});
       setUserData(response.data);
       console.log('Got Response:', response.data);
-      Linking.openURL(response.data)
-   
 
+      if (response.data.user_id) {
+        setLoggedIn(true);
+        console.log('Logged in:', response.data);
+      }
+      //if contains url, open url
+      if (response.data.auth_url){
+
+        console.log('Opening URL:', response.data.auth_url);
+        Linking.openURL(response.data.auth_url)
+
+        await  new Promise(r => setTimeout(r, 10000));
+        const response2 = await axios.get('http://127.0.0.1:8080', {
+            withCredentials: true,});
+            console.log('Got User after 10s:', response2.data);
+      }
+      /*
+      //wait 5 seconds
+       await  new Promise(r => setTimeout(r, 10000));
+    const response2 = await axios.get( 'http://127.0.0.1:8080/callback' , {withCredentials: true});
+    console.log('Got User:', response2.data);
+      */
     } catch (error) {
         console.error('Error logging in:', error);
       }

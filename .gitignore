@@ -62,3 +62,7 @@ client/ios/client/Images.xcassets/SplashScreenBackground.imageset/Contents.json
 client/ios/client/Supporting/Expo.plist
 client/ios/client.xcodeproj/project.pbxproj
 client/ios/client.xcodeproj/xcshareddata/xcschemes/client.xcscheme
+dump.rdb
+.flask_session/789ecb5acdb1fa42ccc232a408ecf1a5
+.flask_session/3737ffab1708846cda59a6fcae1d6498
+.flask_session/dcaf53793ff3bf668ea070a7bda3fc6f

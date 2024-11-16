@@ -1,37 +1,45 @@
 import os
-from flask import Flask, session, request, redirect
-from flask_session import Session
+from datetime import timedelta
 import spotipy
+from dotenv import load_dotenv
+from flask import Flask, request, jsonify, redirect, session
+from flask_session import Session
+import redis
+from flask_cors import CORS, cross_origin
+from flask_restful import Api
 from firebase import firebase
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-import json
-from dotenv import load_dotenv
-import jsonify
-from flask_cors import CORS, cross_origin
-
-load_dotenv()
-scope = "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public"
-REDIRECT_URI = "http://127.0.0.1:8080"
-SHOW_DIALOG = True
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(64)
-#app.config['SECRET_KEY'] = "secret_key"
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_FILE_DIR'] = './.flask_session/'
+backup_secret_key = os.urandom(24)
+app.secret_key = backup_secret_key
+api = Api(app)
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_PERMANENT'] = False
+redis_client = redis.from_url("redis://127.0.0.1:6379")
+app.config['SESSION_REDIS'] = redis_client
 
-server_session = Session(app) 
-CORS(app, supports_credentials=True)
+app.config['SESSION_COOKIE_SECURE'] = True  # Set to True if using HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Ensure the cookie is sent with cross-site requests
 
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
+
+server_session = Session(app)
+
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+load_dotenv()
+
+MY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+MY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+MY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
 firebase = firebase.FirebaseApplication('https://harmonize-cs370-default-rtdb.firebaseio.com/', None)
 
 #load env variables from .env file into variables
-SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
-SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
-SPOTIPY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
 type= os.getenv("type")
 project_id= os.getenv("project_id")
 private_key_id= os.getenv("private_key_id")
@@ -64,73 +72,88 @@ firebase_admin.initialize_app(cred, {
 })
 
 
-cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-auth_manager = spotipy.oauth2.SpotifyOAuth(scope= "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public",
-                                               cache_handler=cache_handler,
-                                               show_dialog=True)
+cache_handler = spotipy.cache_handler.RedisCacheHandler(redis_client)
+sp_oauth = spotipy.oauth2.SpotifyOAuth(
+        client_id=MY_CLIENT_ID, client_secret=MY_CLIENT_SECRET, redirect_uri=MY_REDIRECT_URI,
+        scope='user-read-private playlist-modify-public playlist-modify-private playlist-read-private',
+        cache_handler=cache_handler
+    )
+print('Redis Instance Running? ' + str(redis_client.ping()))
+
 
 @app.route('/', methods=['GET'])
-@cross_origin()
-def index():
+def login():
     
-    if request.args.get("code"):
-        # Step 2. Being redirected from Spotify auth page
-        auth_manager.get_access_token(request.args.get("code"))
-        return redirect('/')
 
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+    if request.args.get("code"):
+        print("redirected code")
+      # Step 2. Being redirected from Spotify auth page
+        sp_oauth.get_access_token(request.args.get("code"))
+        return redirect('/')
+    
+    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
+        print("not logged in")
         # Step 1. Display sign in link when no token
-        auth_url = auth_manager.get_authorize_url()
+        auth_url = sp_oauth.get_authorize_url()
         #return f'<h2><a href="{auth_url}">Sign in</a></h2>'
         #return redirect(auth_url)
-        return auth_url
-    # Step 3. Signed in, display data
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
+        return {"auth_url": auth_url}
+    
+    print("logged in code")
+    spotify = spotipy.Spotify(auth_manager=sp_oauth)
+    user = spotify.current_user()
+    print(user)
+    user_id = user['id']
+    session['user'] = user_id
+    """auth_url = sp_oauth.get_authorize_url()
+    session['spotify_auth_state'] = sp_oauth.state
+    #return jsonify({"auth_url": auth_url})  # auth code is exchanged for a token, then redirects to callback URI
+    return redirect(auth_url)"""
+    print(user_id)    
+    return user_id
+
+#clear 
+@app.route('/clear', methods=['GET'])
+def clear():
+    print("clear")
+    session.clear()
+    #clear redis server
+    redis_client.flushall()
+    return 'Session cleared'
+
+@app.route('/callback', methods=['GET'])
+def callback():
+    print("callback")
+    """code = request.args.get('code')
+    if not code:
+        return 'Authorization failed', 401"""
+    #try:
+    
+    """sp_oauth = spotipy.oauth2.SpotifyOAuth(
+    client_id=MY_CLIENT_ID, client_secret=MY_CLIENT_SECRET, redirect_uri=MY_REDIRECT_URI,
+    scope='user-read-private playlist-modify-public playlist-modify-private playlist-read-private',
+    cache_handler=cache_handler)
+    spotify = spotipy.Spotify(auth_manager=sp_oauth)
     user = spotify.current_user()
     print(user)
 
-    #get user data from spotify
-    user_dict = {}
-    user_dict["current_user"] = user
-    print("user_dict")
-    print(user_dict)
-    user_dict["spotify_data"] = gen_spotify_user_profile()
+    user_id = user['id']
 
-    user_id = user_dict['current_user']['id']
-
-    db.reference("/").update({user_id: user_dict})
+    #db.reference("/").update({user_id: user_dict})
     #session.clear()
-    session['user'] = user_id
-    """code = request.args.get('code')
-    token_info = auth_manager.get_access_token(code)
-    session["token_info"] = token_info"""
+    session['user'] = "user_id"
+    
+    return user_id"""
+    return session['user']
+"""
+    return redirect(f'frontend_URL/?code={code}')
+    except spotipy.SpotifyOauthError as s:
+        app.logger.error(f"Spotify OAuth error: {s}")
+        return f'A Spotify OAuth error occurred: {s}', 401
+    except Exception as e:
+        app.logger.error(f"An error occurred: {e}")
+        return f'An error occurred: {e}', 500"""
 
-    return user_id
-    """return  f'<h2>Hi {spotify.me()["display_name"]}, ' \
-            f'<small><a href="/sign_out">[sign out]<a/></small></h2>' \
-            f'<a href="/fetch_user_data">fetch user data</a> | ' \
-            f'<a href="/matches">matches</a> | ' \
-            f'<a href="/sign_up">[sign up]<a/> | '  \
-            f'<a href="/blend">blend</a> | ' \
-            f'<a href="/playlists">my playlists</a> | ' \
-            f'<a href="/currently_playing">currently playing</a> | ' \
-            f'<a href="/current_user_top_tracks">top tracks</a> | ' \
-            f'<a href="/current_user_top_artists">top artists</a> | ' \
-            f'<a href="/current_user_saved_albums">saved albums</a> | ' \
-            f'<a href="/current_user_recently_played">recently played</a> | ' \
-            f'<a href="/current_user_following_artists">following artists</a> | ' \
-            f'<a href="/generate_spotify_user_profile">generate_spotify_user_profile</a> | ' \
-        f'<a href="/current_user">me</a>' \" """
-        
-@app.route('/get_user_id', methods=['GET'])
-@cross_origin()
-def get_user_id():
-    print("get_user_id")
-    if("user" in session):
-        return session['user']
-    else:
-        return "no user in session"
-        
 @app.route('/receive_form', methods=['POST'])
 @cross_origin()
 def receive_form():

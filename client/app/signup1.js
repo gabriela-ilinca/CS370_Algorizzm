@@ -52,25 +52,7 @@ const Signup1 = () => {
           } catch (error) {
             Alert.alert('Error', error.message);
           }
-          /*try {
-            // Make a POST request to your Flask backend
-            const response = await fetch('http://127.0.0.1:8080/receive_form', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            });
-      
-            if (response.ok) {
-              const jsonResponse = await response.json();
-              Alert.alert('Success', jsonResponse.message);
-            } else {
-              Alert.alert('Error', 'Something went wrong. Please try again.');
-            }
-          } catch (error) {
-            Alert.alert('Error', error.message);
-          }*/
+  
 
 
     };

@@ -32,7 +32,7 @@ const Login = () => {
       .then(() => alert('Data written successfully!'))
         .catch((error) => alert('Error writing data: ' + error.message));
   
-        setUsername(''); // Clear input after write
+        ssetUername(''); // Clear input after write
         setPassword(''); // Clear input after write
         router.push('/tabs')
   }
