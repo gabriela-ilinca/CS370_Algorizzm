@@ -4,15 +4,20 @@ import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feed from '../../components/feed';
 import sample from '../../components/sample';
+import { set } from 'firebase/database';
+
 
 const Home = () => {    
     const router = useRouter()
     const [user, setUser] = useState(sample)
+  
+  
 
 
 
     //pull user info here
     const handleLike=()=> {
+        
         //handle like logic
     }
 

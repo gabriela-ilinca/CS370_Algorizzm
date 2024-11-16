@@ -1,29 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dimensions, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { images } from '../assets';
+import { database } from './firebase.js'; // Ensure you have a firebase.js file set up correctly
+import { ref, set, onValue } from 'firebase/database';
+
+
+
 
 const { width } = Dimensions.get('window');
 const margin = 20;
 const length = width - margin * 2;
 
 const Login = () => {
+
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-
-
   const handleLogin = async () => {
     //ready to send username and password state vars to firebase for auth
-    router.push('/tabs')
+    // Write to Firebase
+      if (username.trim() === '' || password.trim() === '') {
+        alert('Please enter a value for both fields!');
+        return;
+      }
+      console.log("name: ", username);
+      set(ref(database, `${username}`), { value: username })
+      set(ref(database, `${username}/password/`), { value: password })
+      .then(() => alert('Data written successfully!'))
+        .catch((error) => alert('Error writing data: ' + error.message));
+  
+        setUsername(''); // Clear input after write
+        setPassword(''); // Clear input after write
+        router.push('/tabs')
   }
 
   const handleSpotifyLogin = async () => {
     //ready to check spotify creds
     router.push('/tabs')
   }
+
+/*
+  const [inputValue, setInputValue] = useState('');
+  const [data, setData] = useState('No data yet');
+
+  //Write to Firebase
+  const writeToDatabase = () => {
+    if (inputValue.trim() === '') {
+      alert('Please enter a value!');
+      return;
+    }
+
+    set(ref(database, 'example/'), { value: inputValue })
+      .then(() => alert('Data written successfully!'))
+      .catch((error) => alert('Error writing data: ' + error.message));
+
+    setInputValue(''); // Clear input after write
+  };
+
+  // Read from Firebase
+  useEffect(() => {
+    const dataRef = ref(database, 'example/');
+    const unsubscribe = onValue(dataRef, (snapshot) => {
+      const value = snapshot.val();
+      setData(value ? value.value : 'No data found');
+    });
+
+    return () => unsubscribe(); // Cleanup listener on unmount
+  }, []);
+  */
+
+
+
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

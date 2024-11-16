@@ -20,18 +20,7 @@ const Signup = () => {
       setUserData(response.data);
       console.log('Got Response:', response.data);
       Linking.openURL(response.data)
-      /*
-      //await 10s
-        await new Promise(resolve => setTimeout(resolve, 10000));
-        setLoggedIn(true);
-        //get user data from same url
-        const username = await axios.get('http://127.0.0.1:8080', {
-            headers: {
-                'Cache-Control': 'no-cache',                
-            }}); // Update URL if needed
-        setUsername(username.data);
-        console.log('Got Response:', username.data);
-        */
+   
 
     } catch (error) {
         console.error('Error logging in:', error);

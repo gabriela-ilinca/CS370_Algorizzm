@@ -2,6 +2,8 @@ import { Text, View, SafeAreaView, TouchableOpacity, TextInput, StyleSheet, Scro
 import React, { useState, useEffect } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { database } from './firebase.js'; // Ensure you have a firebase.js file set up correctly
+import { ref, set, onValue } from 'firebase/database';
 
 
 const Signup1 = () => {    
@@ -13,6 +15,8 @@ const Signup1 = () => {
     const [insta, setInsta] = useState('');
     const [location, setLocation] = useState('');
     const [bio, setBio] = useState('');
+    //boolean var, receivedForm, to check if form has been received
+    const [receivedForm, setReceivedForm] = useState(false);
 
 
     const handleNext = async () => {
@@ -24,6 +28,31 @@ const Signup1 = () => {
             bio: bio
           };
           try {
+            if (name.trim() === '' || dob.trim() === '' || insta.trim() === '' || location.trim() === '' || bio.trim() === '') {
+                alert('Please enter a value for all fields!');
+                return;
+              }
+            if ( receivedForm === true){
+                alert('Form has already been submitted');
+                return;
+                }
+              console.log("form: ", data);
+              set(ref(database,`${username}`), { value: data })
+              .then(() => alert('Data written successfully!'))
+                .catch((error) => alert('Error writing data: ' + error.message));
+          
+                setName(''); // Clear input after write
+                setDob(''); // Clear input after write
+                setInsta(''); // Clear input after write
+                setLocation(''); // Clear input after write
+                setBio(''); // Clear input after write
+                setReceivedForm(true);
+            router.push('/tabs')
+
+          } catch (error) {
+            Alert.alert('Error', error.message);
+          }
+          /*try {
             // Make a POST request to your Flask backend
             const response = await fetch('http://127.0.0.1:8080/receive_form', {
               method: 'POST',
@@ -41,7 +70,7 @@ const Signup1 = () => {
             }
           } catch (error) {
             Alert.alert('Error', error.message);
-          }
+          }*/
 
 
     };
