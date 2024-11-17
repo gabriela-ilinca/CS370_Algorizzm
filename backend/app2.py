@@ -36,7 +36,10 @@ load_dotenv()
 
 MY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 MY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
-MY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
+#MY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
+MY_REDIRECT_URI = 'http://10.0.0.121:8080'
+
+
 firebase = firebase.FirebaseApplication('https://harmonize-cs370-default-rtdb.firebaseio.com/', None)
 
 #load env variables from .env file into variables
@@ -75,7 +78,7 @@ firebase_admin.initialize_app(cred, {
 cache_handler = spotipy.cache_handler.RedisCacheHandler(redis_client)
 sp_oauth = spotipy.oauth2.SpotifyOAuth(
         client_id=MY_CLIENT_ID, client_secret=MY_CLIENT_SECRET, redirect_uri=MY_REDIRECT_URI,
-        scope='user-read-private playlist-modify-public playlist-modify-private playlist-read-private',
+        scope = "user-read-currently-playing playlist-modify-private user-top-read user-read-recently-played user-library-read user-follow-read playlist-modify-public",
         cache_handler=cache_handler
     )
 print('Redis Instance Running? ' + str(redis_client.ping()))
@@ -109,6 +112,12 @@ def login():
     session['spotify_auth_state'] = sp_oauth.state
     #return jsonify({"auth_url": auth_url})  # auth code is exchanged for a token, then redirects to callback URI
     return redirect(auth_url)"""
+
+    user_dict = {}
+    user_dict["spotify_data"] = gen_spotify_user_profile()
+
+    db.reference("/").update({user_id: user_dict})
+
     print(user_id)    
     return user_id
 
@@ -401,11 +410,9 @@ def current_user():
 #@app.route('/current_user_top_tracks')
 #@cross_origin()
 def current_user_top_tracks():
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify = spotipy.Spotify(auth_manager=sp_oauth)
     top_tracks = spotify.current_user_top_tracks(limit = 10)
     
     #multiple tracks logic
@@ -433,11 +440,10 @@ def current_user_top_tracks():
 #@app.route('/current_user_top_artists')
 #@cross_origin()
 def current_user_top_artists():
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+    
+    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify = spotipy.Spotify(auth_manager=sp_oauth)
     top_artists = spotify.current_user_top_artists(limit = 5)
 
     artists_info = []
@@ -469,11 +475,10 @@ def current_user_saved_albums():
 #@app.route('/current_user_recently_played')
 #@cross_origin()
 def current_user_recently_played():
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+    
+    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         return redirect('/')
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify = spotipy.Spotify(auth_manager=sp_oauth)
     recent_tracks = spotify.current_user_recently_played(limit = 5)
     recents = []
     for track in recent_tracks['items']:
@@ -489,8 +494,8 @@ def current_user_recently_played():
 
     return recents
 
-@app.route('/current_user_following_artists')
-@cross_origin()
+#@app.route('/current_user_following_artists')
+#@cross_origin()
 def current_user_following_artists():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -499,11 +504,10 @@ def current_user_following_artists():
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return spotify.current_user_followed_artists()
 
-'''
-Following lines allow application to be run more conveniently with
-`python app.py` (Make sure you're using python3)
-(Also includes directive to leverage pythons threading capacity.)
-'''
+
 if __name__ == '__main__':
     #run threaded on port http://localhost:8080/
-    app.run(threaded=True, port=8080, debug=True)
+    #app.run(threaded=True, port=8080, debug=True)
+    #run on local network
+    app.run(host='10.0.0.121', port=8080, debug=True)
+
