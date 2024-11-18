@@ -1,13 +1,15 @@
 import { Text, View, SafeAreaView, TouchableOpacity, TextInput, StyleSheet, ScrollView, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { database } from './firebase.js'; // Ensure you have a firebase.js file set up correctly
+import { database } from '../firebase.js'; // Ensure you have a firebase.js file set up correctly
 import { ref, set, onValue } from 'firebase/database';
 
 
 const Signup1 = () => {    
     const router = useRouter();
+    const { query } = useLocalSearchParams();  // Retrieve dynamic user parameter from URL
+
     
     // State to handle input values
     const [name, setName] = useState('');
@@ -17,7 +19,10 @@ const Signup1 = () => {
     const [bio, setBio] = useState('');
     //boolean var, receivedForm, to check if form has been received
     const [receivedForm, setReceivedForm] = useState(false);
+    const [userData, setUserData] = useState(user || 'missing');
 
+    
+   
 
     const handleNext = async () => {
         const data = {
@@ -27,7 +32,20 @@ const Signup1 = () => {
             location: location,
             bio: bio
           };
+          //get user data from router
+          console.log("handleNext")
           try {
+            
+            if (!query) {
+                console.log('No user data found');
+            } else {
+                setUserData(query);  // Set the user data once it's available
+            }
+            console.log("user: ", userData); // log username
+
+
+
+            // Write to Firebase
             if (name.trim() === '' || dob.trim() === '' || insta.trim() === '' || location.trim() === '' || bio.trim() === '') {
                 alert('Please enter a value for all fields!');
                 return;
@@ -37,7 +55,7 @@ const Signup1 = () => {
                 return;
                 }
               console.log("form: ", data);
-              set(ref(database,`${username}`), { value: data })
+              set(ref(database,`${userData}/form`), { data })
               .then(() => alert('Data written successfully!'))
                 .catch((error) => alert('Error writing data: ' + error.message));
           

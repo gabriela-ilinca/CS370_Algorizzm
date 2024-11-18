@@ -116,11 +116,11 @@ def login():
     user_dict = {}
     user_dict["spotify_data"] = gen_spotify_user_profile()
 
-    db.reference("/").update({user_id: user_dict})
+    db.reference(f"/{user_id}/spotify").update({user_id: user_dict})
 
     print(user_id)    
-    return user_id
-
+    #return user_id
+    return {"user_id": user_id}
 #clear 
 @app.route('/clear', methods=['GET'])
 def clear():
