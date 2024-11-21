@@ -1,15 +1,19 @@
-import { Tabs, useRouter } from 'expo-router';
+import { Tabs, useRouter, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Image, View } from 'react-native';
 import Constants from 'expo-constants';
-import { images } from '../../assets';
+import { images } from '../../../assets';
+
 
 const Layout = () => {
+    console.log("layout.js loaded")
     const [activeTab, setActiveTab] = useState('home')
     const router = useRouter();
     // const { currentPage } = useSelector((state) => state.page);
     // const dispatch = useDispatch()
+    const {user_layout} = useLocalSearchParams();
+    console.log("layout.js loaded for user: ", user_layout)
 
     const handleHome= () => {
         router.push('/tabs/home')

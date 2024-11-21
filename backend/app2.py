@@ -37,8 +37,7 @@ load_dotenv()
 MY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 MY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 #MY_REDIRECT_URI = os.getenv("SPOTIPY_REDIRECT_URI")
-MY_REDIRECT_URI = 'http://10.0.0.121:8080'
-
+MY_REDIRECT_URI = 'http://127.0.0.1:8080'
 
 firebase = firebase.FirebaseApplication('https://harmonize-cs370-default-rtdb.firebaseio.com/', None)
 
@@ -87,7 +86,6 @@ print('Redis Instance Running? ' + str(redis_client.ping()))
 @app.route('/', methods=['GET'])
 def login():
     
-
     if request.args.get("code"):
         print("redirected code")
       # Step 2. Being redirected from Spotify auth page
@@ -125,9 +123,11 @@ def login():
 @app.route('/clear', methods=['GET'])
 def clear():
     print("clear")
+    session.pop('user', None)  # Removes specific session data
     session.clear()
     #clear redis server
     redis_client.flushall()
+
     return 'Session cleared'
 
 @app.route('/callback', methods=['GET'])
@@ -509,5 +509,5 @@ if __name__ == '__main__':
     #run threaded on port http://localhost:8080/
     #app.run(threaded=True, port=8080, debug=True)
     #run on local network
-    app.run(host='10.0.0.121', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8080, debug=True)
 

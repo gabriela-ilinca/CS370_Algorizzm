@@ -52,8 +52,8 @@ const Login = () => {
    
 
 
-   //const response = await axios.get('http://127.0.0.1:8080', {
-     const response = await axios.get('http://10.0.0.121:8080', {
+   const response = await axios.get('http://127.0.0.1:8080', {
+     //const response = await axios.get('http://10.44.234.67:8080', {
 
      withCredentials: true,});
    
@@ -70,7 +70,7 @@ const Login = () => {
 
      await  new Promise(r => setTimeout(r, 10000));
      //giving them time to sign in, need a better way maybe do a while until we receive username
-     const response2 = await axios.get('http://10.0.0.121:8080', {
+     const response2 = await axios.get('http://10.44.234.67:8080', {
          withCredentials: true,});
          console.log('Got User after 10s:', response2.data);
          user = response2.data.user_id;
@@ -122,7 +122,7 @@ const Login = () => {
     const dataRef = ref(database, 'example/');
     const unsubscribe = onValue(dataRef, (snapshot) => {
       const value = snapshot.val();
-      setData(value ? value.value : 'No data found');
+      setData(value ? value.value : 'No data found';
     });
 
     return () => unsubscribe(); // Cleanup listener on unmount

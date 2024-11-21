@@ -4,6 +4,7 @@ import { Stack, Redirect } from 'expo-router';
 import { images } from '../assets';
 
 const Home = () => {
+  console.log("index.js loaded")
     const [loaded, setLoaded] = useState(true);
       setTimeout(() => {
           setLoaded(false);

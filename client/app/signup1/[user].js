@@ -52,7 +52,8 @@ const Signup1 = () => {
               }
             if ( receivedForm === true){
                 alert('Form has already been submitted');
-                return;
+                console.log("pushing user_layout: ", user_layout);
+                router.push({pathname: `/tabs/_layout/${user_layout}`, params: { user_layout: user_layout }});
                 }
               console.log("form: ", data);
               set(ref(database,`${userData}/form`), { data })
@@ -65,7 +66,12 @@ const Signup1 = () => {
                 setLocation(''); // Clear input after write
                 setBio(''); // Clear input after write
                 setReceivedForm(true);
-            router.push('/tabs')
+            //router.push('/tabs')
+            const user_layout = userData;
+            console.log("pushing user_layout: ", user_layout);
+            //router.push({pathname: `/tabs/_layout/${user_layout}`});
+            router.push(`/tabs/_layout/${user_layout}`);
+
 
           } catch (error) {
             Alert.alert('Error', error.message);

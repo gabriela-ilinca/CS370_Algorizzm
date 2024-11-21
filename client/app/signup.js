@@ -14,15 +14,10 @@ const Signup = () => {
     try {
 
          user = "missing";
-        //clear session
-        /*const response0 = await axios.get('http://your ip:8080/clear', {
-            withCredentials: true,});
-            console.log('Cleared session', response0.data);*/
-      
-
-
+        
+    
       //const response = await axios.get('http://127.0.0.1:8080', {
-        const response = await axios.get('http://10.0.0.121:8080', {
+        const response = await axios.get('http://127.0.0.1:8080', {
 
         withCredentials: true,});
       
@@ -39,13 +34,17 @@ const Signup = () => {
 
         await  new Promise(r => setTimeout(r, 10000));
         //giving them time to sign in, need a better way maybe do a while until we receive username
-        const response2 = await axios.get('http://10.0.0.121:8080', {
+        const response2 = await axios.get('http://127.0.0.1:8080', {
             withCredentials: true,});
             console.log('Got User after 10s:', response2.data);
             user = response2.data.user_id;
       }
 
       console.log('User  has been updated to:', user);
+
+      const response3 = await axios.get('http://127.0.0.1:8080/clear', {
+        withCredentials: true,});
+        console.log('Clearing Server Side Data:', response3.data);
       /*
       //wait 5 seconds
        await  new Promise(r => setTimeout(r, 10000));
