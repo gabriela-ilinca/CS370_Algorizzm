@@ -6,8 +6,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 // Firebase imports
 import { auth } from '../config/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
-const Signup = () => {    
+// Initialize Firestore
+const db = getFirestore();
+
+const Signup = () => {
     const router = useRouter();
     
     // State to handle input values
@@ -24,8 +28,19 @@ const Signup = () => {
             return;
         }
         try {
+            // Create user with email and password
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            console.log("User signed up:", userCredential.user);
+            const user = userCredential.user;
+
+            // After creating the user, store additional fields in Firestore
+            await setDoc(doc(db, 'users', user.uid), {
+                name,
+                dob,
+                email,
+                insta,
+            });
+
+            console.log("User signed up and additional data saved:", user);
             router.push('/signup1');
         } catch (error) {
             console.error("Error signing up:", error.message);
