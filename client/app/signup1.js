@@ -1,4 +1,4 @@
-import { Text, View, SafeAreaView, TouchableOpacity, Image, StyleSheet, redirect } from 'react-native';
+import { Text, View, SafeAreaView, TouchableOpacity, Image, StyleSheet, redirect, Linking } from 'react-native';
 import React from 'react';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -13,6 +13,7 @@ const Signup1 = () => {
     const handleSpotifySync = async () => {
         try {
             // Redirect to Flask backend for Spotify login
+            Linking.openURL('http://10.44.207.46:8080/login');
             const response = await axios.get('http://10.44.207.46:8080/fetch_data');
             const { data } = response;
     
