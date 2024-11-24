@@ -69,14 +69,9 @@ const Login = () => {
             </TouchableOpacity>
 
             <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginVertical: 20, alignItems: 'center'}}>
-              {/* <View style={{height: 1, width: 100, backgroundColor: 'white'}}/> */}
-              {/* <Text style={{color:'white'}}>Or</Text> */}
-              {/* <View style={{height: 1, width: 100, backgroundColor: 'white'}}/> */}
+
             </View>
-           
-            {/* <TouchableOpacity onPress={handleSpotifyLogin} style={styles.spotify}>
-              <Text style={{ textAlign: "left", color: "#FFF" }}>Sign in with Spotify</Text>
-            </TouchableOpacity> */}
+
           </View>
           
         </View>
