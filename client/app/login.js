@@ -20,10 +20,10 @@ const Login = () => {
     router.push('/tabs')
   }
 
-  const handleSpotifyLogin = async () => {
-    //ready to check spotify creds
-    router.push('/tabs')
-  }
+  // const handleSpotifyLogin = async () => {
+  //   //ready to check spotify creds
+  //   router.push('/tabs')
+  // }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -70,13 +70,13 @@ const Login = () => {
 
             <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginVertical: 20, alignItems: 'center'}}>
               {/* <View style={{height: 1, width: 100, backgroundColor: 'white'}}/> */}
-              <Text style={{color:'white'}}>Or</Text>
+              {/* <Text style={{color:'white'}}>Or</Text> */}
               {/* <View style={{height: 1, width: 100, backgroundColor: 'white'}}/> */}
             </View>
            
-            <TouchableOpacity onPress={handleSpotifyLogin} style={styles.spotify}>
+            {/* <TouchableOpacity onPress={handleSpotifyLogin} style={styles.spotify}>
               <Text style={{ textAlign: "left", color: "#FFF" }}>Sign in with Spotify</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           
         </View>

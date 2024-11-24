@@ -44,7 +44,7 @@ const Layout = () => {
      )}} />
      <Tabs.Screen name='matches' options={{ tabBarIcon: () => (
         <TouchableOpacity style={{flex: 1, width: '100%', alignItems:"center"}} onPress={handleMatches}>
-            <Ionicons name='heart' size={24} color= { activeTab == 'matches' ? '#92d4fa' : "#fcb1d6"} style={{flex: 1, paddingVertical: 10}}/>
+            <Ionicons name='heart' size={24} color= { activeTab == 'matches' ? '#92d4fa' : "#fcb1d6"} style={{flex: 1, paddingVertical: 0}}/>
         </TouchableOpacity>
      )}} />
      {/* <Tabs.Screen name='chat' options={{ tabBarIcon: () => (
@@ -54,7 +54,7 @@ const Layout = () => {
      )}} /> */}
      <Tabs.Screen name='profile' options={{ tabBarIcon: () => (
         <TouchableOpacity style={{flex: 1, width: '100%', alignItems:"center"}} onPress={handleProfile}>
-            <Ionicons name='person' size={24} color={ activeTab == 'profile' ? '#92d4fa' : "#fcb1d6"} style={{flex: 1, paddingVertical: 10}}/>
+            <Ionicons name='person' size={24} color={ activeTab == 'profile' ? '#92d4fa' : "#fcb1d6"} style={{flex: 1, paddingVertical: 0}}/>
         </TouchableOpacity>
      )}} />
     </Tabs>
