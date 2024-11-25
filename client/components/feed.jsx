@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, StyleSheet, Image, Dimensions, Linking } from 'react-native';
 import React from 'react';
 import { useRouter } from 'expo-router';
 import Carousel from 'react-native-reanimated-carousel';
@@ -40,20 +40,21 @@ const Feed = (props) => {
             {/* Name */}
             <View style={{ flex: 1, width: width * 0.9, alignItems: 'flex-start', marginTop: -20 }}>
                 <Text style={{ textAlign: "center", color: "#FFF", fontWeight: 'bold', fontSize: 25}}>{props.name}</Text>
-                <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>{props.ig}</Text>
+                <Text style={{ textAlign: "center", color: "#FFF", marginTop: 5 }}>@{props.ig}</Text>
             </View>
 
             {/* Prompt */}
             <View style={styles.promptContainer}>
-                <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{props.prompt1Question}</Text>
+                <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>Currently stuck in my head...</Text>
                 <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                    {/* 1 */}
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
-                        '#333', borderRadius:10, padding: 10}}>
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10, marginTop: 10}}>
                         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                             <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
-                                {/* Album Cover */}
+                                
                                 <Image 
-                                    source={props.prompt1Thumbnail}
+                                    source={props.playing1Thumbnail}
                                     style={{ height: '100%', width: '100%' }}
                                     resizeMode="cover"
                                 />
@@ -62,31 +63,25 @@ const Feed = (props) => {
                                 <Text 
                                 numberOfLines={1} 
                                 ellipsizeMode="tail"
-                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.prompt1Title}</Text>
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing1Title}</Text>
                                 <Text 
                                 numberOfLines={1} 
                                 ellipsizeMode="tail"
-                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.prompt1Artist}</Text>
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing1Artist}</Text>
                             </View>
                         </View>
                         <TouchableOpacity>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View>
-                </View>
-            </View>
-
-            {/* Prompt */}
-            <View style={styles.promptContainer}>
-                <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{props.prompt2Question}</Text>
-                <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                    {/* 2 */}
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
-                        '#333', borderRadius:10, padding: 10}}>
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
                         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                             <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
-                                {/* Album Cover */}
+                                
                                 <Image 
-                                    source={props.prompt2Thumbnail}
+                                    source={props.playing2Thumbnail}
                                     style={{ height: '100%', width: '100%' }}
                                     resizeMode="cover"
                                 />
@@ -95,31 +90,25 @@ const Feed = (props) => {
                                 <Text 
                                 numberOfLines={1} 
                                 ellipsizeMode="tail"
-                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.prompt2Title}</Text>
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing2Title}</Text>
                                 <Text 
                                 numberOfLines={1} 
                                 ellipsizeMode="tail"
-                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.prompt2Artist}</Text>
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing2Artist}</Text>
                             </View>
                         </View>
                         <TouchableOpacity>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View>
-                </View>
-            </View>
-
-            {/* Prompt */}
-            <View style={styles.promptContainer}>
-                <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{props.prompt3Question}</Text>
-                <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                    {/* 3 */}
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
-                        '#333', borderRadius:10, padding: 10}}>
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
                         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
                             <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
-                                {/* Album Cover */}
+                                
                                 <Image 
-                                    source={props.prompt3Thumbnail}
+                                    source={props.playing3Thumbnail}
                                     style={{ height: '100%', width: '100%' }}
                                     resizeMode="cover"
                                 />
@@ -128,20 +117,75 @@ const Feed = (props) => {
                                 <Text 
                                 numberOfLines={1} 
                                 ellipsizeMode="tail"
-                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.prompt3Title}</Text>
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing3Title}</Text>
                                 <Text 
                                 numberOfLines={1} 
                                 ellipsizeMode="tail"
-                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.prompt3Artist}</Text>
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing3Artist}</Text>
                             </View>
                         </View>
                         <TouchableOpacity>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View>
+                    {/* 4 */}
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
+                                
+                                <Image 
+                                    source={props.playing4Thumbnail}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing4Title}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing4Artist}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity>
+                            <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
+                    </View>
+                   {/* 5 */}
+                   <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
+                                
+                                <Image 
+                                    source={props.playing5Thumbnail}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing5Title}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing5Artist}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity>
+                            <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
+                    </View> 
                 </View>
             </View>
 
+            
             {/* Top 5 Songs */}
             <View style={styles.top5Container}>
                 <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
@@ -243,7 +287,7 @@ const styles = StyleSheet.create({
     },
     promptContainer: {
         width: width * 0.9, // Match this to itemWidth in Carousel
-        height: 150,
+        //height: width * 1.2,
         backgroundColor: '#222',
         borderRadius: 10,
         marginTop: 35,

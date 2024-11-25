@@ -5,23 +5,32 @@ const sample = {
     pic2: images.lebron2,
     pic3: images.lebron3,
     name: 'Kelsington Park',
-    ig: '@kelseyprk',
-    prompt1: {
-        question: 'Currently stuck in my head...', //last listened to/currently playing
+    ig: 'kelseyprk',
+    playing1: {
         thumbnail: images.btr,
         title: 'Boyfriend',
         artist: 'Big Time Rush',
         preview_link: '',
     },
-    prompt2: {
-        question: 'Song on repeat...', //choose random from on repeat playlist
+    playing2: {
         thumbnail: images.zb,
         title: 'Something in the Orange',
         artist: 'Zach Bryan',
         preview_link: '',
     },
-    prompt3: {
-        question: 'In 2016, this was my shit...', //choose random from throwback playlist
+    playing3: {
+        thumbnail: images.yt,
+        title: 'Digits',
+        artist: 'Young Thug',
+        preview_link: '',
+    },
+    playing4: {
+        thumbnail: images.yt,
+        title: 'Digits',
+        artist: 'Young Thug',
+        preview_link: '',
+    },
+    playing5: {
         thumbnail: images.yt,
         title: 'Digits',
         artist: 'Young Thug',
