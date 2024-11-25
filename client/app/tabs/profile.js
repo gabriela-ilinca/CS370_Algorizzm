@@ -87,103 +87,146 @@ const Profile = () => {
                 </View>
 
                 {/* Prompt */}
-                <View style={styles.promptContainer}>
-                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{user.prompt1.question}</Text>
-                    <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
-                            '#333', borderRadius:10, padding: 10}}>
-                            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                                <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
-                                    {/* Album Cover */}
-                                    <Image 
-                                        source={user.prompt1.thumbnail}
-                                        style={{ height: '100%', width: '100%' }}
-                                        resizeMode="cover"
-                                    />
-                                </View>
-                                <View style={{paddingHorizontal: 10, width: width * 0.5}}>
-                                    <Text 
-                                    numberOfLines={1} 
-                                    ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{user.prompt1.title}</Text>
-                                    <Text 
-                                    numberOfLines={1} 
-                                    ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{user.prompt1.artist}</Text>
-                                </View>
+            <View style={styles.promptContainer}>
+                <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>Currently stuck in my head...</Text>
+                <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                    {/* 1 */}
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10, marginTop: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
+                                
+                                <Image 
+                                    source={props.playing1Thumbnail}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
                             </View>
-                            <TouchableOpacity>
-                                <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-
-                {/* Prompt */}
-                <View style={styles.promptContainer}>
-                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{user.prompt2.question}</Text>
-                    <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
-                            '#333', borderRadius:10, padding: 10}}>
-                            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                                <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
-                                    {/* Album Cover */}
-                                    <Image 
-                                        source={user.prompt2.thumbnail}
-                                        style={{ height: '100%', width: '100%' }}
-                                        resizeMode="cover"
-                                    />
-                                </View>
-                                <View style={{paddingHorizontal: 10, width: width * 0.5}}>
-                                    <Text 
-                                    numberOfLines={1} 
-                                    ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{user.prompt2.title}</Text>
-                                    <Text 
-                                    numberOfLines={1} 
-                                    ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{user.prompt2.artist}</Text>
-                                </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing1Title}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing1Artist}</Text>
                             </View>
-                            <TouchableOpacity>
-                                <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
-                            </TouchableOpacity>
                         </View>
+                        <TouchableOpacity>
+                            <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
                     </View>
-                </View>
-
-                {/* Prompt */}
-                <View style={styles.promptContainer}>
-                    <Text style={{ textAlign: 'left', color: "#FFF", fontWeight: 'bold', fontSize: 20}}>{user.prompt3.question}</Text>
-                    <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
-                            '#333', borderRadius:10, padding: 10}}>
-                            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                                <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
-                                    {/* Album Cover */}
-                                    <Image 
-                                        source={user.prompt3.thumbnail}
-                                        style={{ height: '100%', width: '100%' }}
-                                        resizeMode="cover"
-                                    />
-                                </View>
-                                <View style={{paddingHorizontal: 10, width: width * 0.5}}>
-                                    <Text 
-                                    numberOfLines={1} 
-                                    ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{user.prompt3.title}</Text>
-                                    <Text 
-                                    numberOfLines={1} 
-                                    ellipsizeMode="tail"
-                                    style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{user.prompt3.artist}</Text>
-                                </View>
+                    {/* 2 */}
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
+                                
+                                <Image 
+                                    source={props.playing2Thumbnail}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
                             </View>
-                            <TouchableOpacity>
-                                <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
-                            </TouchableOpacity>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing2Title}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing2Artist}</Text>
+                            </View>
                         </View>
+                        <TouchableOpacity>
+                            <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
                     </View>
+                    {/* 3 */}
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
+                                
+                                <Image 
+                                    source={props.playing3Thumbnail}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing3Title}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing3Artist}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity>
+                            <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
+                    </View>
+                    {/* 4 */}
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
+                                
+                                <Image 
+                                    source={props.playing4Thumbnail}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing4Title}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing4Artist}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity>
+                            <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
+                    </View>
+                   {/* 5 */}
+                   <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '95%', backgroundColor: 
+                        '#333', borderRadius:10, padding: 10, marginBottom: 10}}>
+                        <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
+                            <View style={{height: 40, width: 40, overflow: 'hidden', borderRadius: 5}}>
+                                
+                                <Image 
+                                    source={props.playing5Thumbnail}
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={{paddingHorizontal: 10, width: width * 0.5}}>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#FFF", marginTop: 5 }}>{props.playing5Title}</Text>
+                                <Text 
+                                numberOfLines={1} 
+                                ellipsizeMode="tail"
+                                style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing5Artist}</Text>
+                            </View>
+                        </View>
+                        <TouchableOpacity>
+                            <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                        </TouchableOpacity>
+                    </View> 
                 </View>
+            </View>
 
                 {/* Top 5 Songs */}
                 <View style={styles.top5Container}>

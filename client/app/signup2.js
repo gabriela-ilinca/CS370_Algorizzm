@@ -134,7 +134,7 @@ const Signup2 = () => {
                     </ScrollView>
                 )}
 
-                {isUploading && <ActivityIndicator size="large" color="#1ED760" style={{ marginVertical: 20 }} />}
+                {isUploading && <ActivityIndicator size="large" color="#FFF" style={{ marginVertical: 20 }} />}
 
                 <View style={{ flex:1, width:'100%', alignItems: 'center', marginTop: 30 }}>
                     <TouchableOpacity 

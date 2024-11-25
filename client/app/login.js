@@ -3,6 +3,8 @@ import { View, Text, TextInput, SafeAreaView, StyleSheet, TouchableOpacity, Dime
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { images } from '../assets';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import {auth} from '../config/firebase'
 
 const { width } = Dimensions.get('window');
 const margin = 20;
@@ -16,9 +18,20 @@ const Login = () => {
 
 
   const handleLogin = async () => {
-    //ready to send username and password state vars to firebase for auth
-    router.push('/tabs')
-  }
+    if (!username || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, username, password);
+      console.log("Logged in user:", userCredential.user);
+      router.push('/tabs');
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+      alert("Login failed. Please check your credentials.");
+    }
+  };
+  
 
   // const handleSpotifyLogin = async () => {
   //   //ready to check spotify creds

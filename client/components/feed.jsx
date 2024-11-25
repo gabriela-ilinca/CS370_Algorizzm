@@ -14,6 +14,22 @@ const Feed = (props) => {
     const router = useRouter();
     const pics = [props.pic1, props.pic2, props.pic3];
 
+    const handlePlay1 = () => {
+        Linking.openURL(props.playing1Link);
+    }
+    const handlePlay2 = () => {
+        Linking.openURL(props.playing2Link);
+    }
+    const handlePlay3 = () => {
+        Linking.openURL(props.playing3Link);
+    }
+    const handlePlay4 = () => {
+        Linking.openURL(props.playing4Link);
+    }
+    const handlePlay5 = () => {
+        Linking.openURL(props.playing5Link);
+    }
+
     return (
         <ScrollView contentContainerStyle={{ alignItems:'center', marginTop: 10, paddingBottom: 140 }} showsVerticalScrollIndicator={false}>
             {/* Centered View for Carousel */}
@@ -70,7 +86,7 @@ const Feed = (props) => {
                                 style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing1Artist}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handlePlay1}>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View>
@@ -97,7 +113,7 @@ const Feed = (props) => {
                                 style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing2Artist}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handlePlay2}>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View>
@@ -124,7 +140,7 @@ const Feed = (props) => {
                                 style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing3Artist}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handlePlay3}>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View>
@@ -151,7 +167,7 @@ const Feed = (props) => {
                                 style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing4Artist}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handlePlay4}>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View>
@@ -178,7 +194,7 @@ const Feed = (props) => {
                                 style={{ textAlign: 'left', color: "#888", marginTop: 5, }}>{props.playing5Artist}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handlePlay5}>
                             <Ionicons name="play-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
                         </TouchableOpacity>
                     </View> 

@@ -1,27 +1,116 @@
-import { Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import { Text, View, SafeAreaView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Stack } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feed from '../../components/feed';
-import sample from '../../components/sample';
+import { db, storage, auth } from '../../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { getDownloadURL, ref } from 'firebase/storage';
 
 const Home = () => {    
-    const router = useRouter()
-    const [user, setUser] = useState(sample)
-
-
-
-    //pull user info here
-    const handleLike=()=> {
-        //handle like logic
-    }
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const handleSkip=()=> {
-        //handle skip logic
+        fetchRandomUser();
     }
 
-    const handleBack=()=> {
-        //handle rewind logic
+    const fetchRandomUser = async () => {
+        try {
+            // Fetch all user profiles
+            setLoading(true);
+            const usersCollection = collection(db, "users");
+            const snapshot = await getDocs(usersCollection);
+            const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+            console.log("Users fetched: ", users);  // Check the fetched data
+    
+            if (users.length === 0) {
+                console.error("No users found in Firestore.");
+                return;
+            }
+    
+            // Get the current user's ID (replace this with your actual method of getting the current user's ID)
+            const currentUserId = auth.currentUser.uid;  
+    
+            // Select a random user, ensuring it's not the current user
+            let randomUser;
+            do {
+                randomUser = users[Math.floor(Math.random() * users.length)];
+            } while (randomUser.id === currentUserId);  // Ensure it's not the current user
+    
+            console.log("Random user: ", randomUser);  // Check the random user data
+    
+            // Safeguard access to Firestore data (in case fields are missing)
+            const userData = {
+                ...randomUser,
+                pic1: null,  // Default profile pictures to null (you'll need to handle actual profile pictures later)
+                pic2: null,
+                pic3: null,
+                recently_played: randomUser.spotifyData.recently_played || [],  // Default to empty array if missing
+                top_songs: randomUser.spotifyData.top_tracks || [],  // Default to empty array if missing
+                top_artists: randomUser.spotifyData.top_artists || [],  // Default to empty array if missing
+                name: randomUser.name || 'Anonymous',  // Default to 'Anonymous' if name is missing
+                ig: randomUser.insta || 'No Instagram',  // Default to 'No Instagram' if insta is missing
+            };
+    
+            // Fetch profile pictures from Firebase Storage (if they exist)
+            const profilePicsPromises = [1, 2, 3].map(async (index) => {
+                try {
+                    const picRef = ref(storage, `profile_pictures/${randomUser.id}/${index}.jpg`);
+                    return await getDownloadURL(picRef);  // Fetch the URL for the image
+                } catch (error) {
+                    console.error(`Error fetching profile picture ${index}:`, error);
+                    return null;  // Return null if there's an error
+                }
+            });
+    
+            const profilePics = await Promise.all(profilePicsPromises);
+    
+            // Combine all data into the user object
+            setUser({
+                ...userData,
+                pic1: profilePics[0] || null,
+                pic2: profilePics[1] || null,
+                pic3: profilePics[2] || null,
+            });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    
+
+    useEffect(() => {
+        fetchRandomUser();
+    }, []);
+
+    if (loading) {
+        return (
+            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#111111' }}>
+                <Stack.Screen
+                options={{ 
+                    headerShown: true,
+                    headerTitle: "",
+                    headerStyle: {
+                        backgroundColor: '#111111',
+                    },
+                    headerShadowVisible: false,
+                }}
+                />
+                <ActivityIndicator size="large" color="#FFF" />
+            </SafeAreaView>
+        );
+    }
+
+    if (!user) {
+        return (
+            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#111111' }}>
+                <Text style={{ color: 'white' }}>No user data available.</Text>
+            </SafeAreaView>
+        );
     }
 
     return (
@@ -29,64 +118,63 @@ const Home = () => {
             <Stack.Screen
                 options={{ 
                     headerShown: true,
-                    headerTitle:"",
+                    headerTitle: "",
                     headerStyle: {
                         backgroundColor: '#111111',
                     },
                     headerShadowVisible: false,
                 }}
             />
-                <View>
-                    <Feed 
-                    pic1={user.pic1}
-                    pic2={user.pic2}
-                    pic3={user.pic3}
+            <View>
+                <Feed 
+                    pic1={user.pic1 ? { uri: user.pic1 } : null}  // Ensure Image receives a valid URL
+                    pic2={user.pic2 ? { uri: user.pic2 } : null}
+                    pic3={user.pic3 ? { uri: user.pic3 } : null}
                     name={user.name}
                     ig={user.ig}
-                    playing1Thumbnail={user.playing1.thumbnail}
-                    playing1Title={user.playing1.title}
-                    playing1Artist={user.playing1.artist}
-                    playing1Link={user.playing1.link}
-                    playing2Thumbnail={user.playing2.thumbnail}
-                    playing2Title={user.playing2.title}
-                    playing2Artist={user.playing2.artist}
-                    playing2Link={user.playing2.link}
-                    playing3Thumbnail={user.playing3.thumbnail}
-                    playing3Title={user.playing3.title}
-                    playing3Artist={user.playing3.artist}
-                    playing3Link={user.playing3.link}
-                    playing4Thumbnail={user.playing4.thumbnail}
-                    playing4Title={user.playing4.title}
-                    playing4Artist={user.playing4.artist}
-                    playing4Link={user.playing4.link}
-                    playing5Thumbnail={user.playing5.thumbnail}
-                    playing5Title={user.playing5.title}
-                    playing5Artist={user.playing5.artist}
-                    playing5Link={user.playing5.link}
-                    song1={user.top_songs.song1}
-                    song2={user.top_songs.song2}
-                    song3={user.top_songs.song3}
-                    song4={user.top_songs.song4}
-                    song5={user.top_songs.song5}
-                    artist1={user.top_artists.artist1}
-                    artist2={user.top_artists.artist2}
-                    artist3={user.top_artists.artist3}
-                    artist4={user.top_artists.artist4}
-                    artist5={user.top_artists.artist5}
-                    />
-                </View>
-
-                <View style={{flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', width:'100%', position: 'absolute', bottom: 0, alignItems: 'center', backgroundColor: '#111111', height: 100}}>
-                    <TouchableOpacity onPress={handleBack}>
-                        <Ionicons name="play-skip-back-outline" size={30} color="#ffffff" style={{marginHorizontal: 10}}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleLike}>
-                        <Ionicons name="heart-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleSkip}>
-                        <Ionicons name="play-skip-forward-outline" size={30} color="#ffffff" style={{marginHorizontal: 10}}/> 
-                    </TouchableOpacity>
-                </View>
+                    playing1Thumbnail={user.recently_played[0]?.thumbnail ? { uri: user.recently_played[0]?.thumbnail } : null}
+                    playing1Title={user.recently_played[0]?.title}
+                    playing1Artist={user.recently_played[0]?.artist}
+                    playing1Link={user.recently_played[0]?.link}
+                    playing2Thumbnail={user.recently_played[1]?.thumbnail ? { uri: user.recently_played[1]?.thumbnail } : null}
+                    playing2Title={user.recently_played[1]?.title}
+                    playing2Artist={user.recently_played[1]?.artist}
+                    playing2Link={user.recently_played[1]?.link}
+                    playing3Thumbnail={user.recently_played[2]?.thumbnail ? { uri: user.recently_played[2]?.thumbnail } : null}
+                    playing3Title={user.recently_played[2]?.title}
+                    playing3Artist={user.recently_played[2]?.artist}
+                    playing3Link={user.recently_played[2]?.link}
+                    playing4Thumbnail={user.recently_played[3]?.thumbnail ? { uri: user.recently_played[3]?.thumbnail } : null}
+                    playing4Title={user.recently_played[3]?.title}
+                    playing4Artist={user.recently_played[3]?.artist}
+                    playing4Link={user.recently_played[3]?.link}
+                    playing5Thumbnail={user.recently_played[4]?.thumbnail ? { uri: user.recently_played[4]?.thumbnail } : null}
+                    playing5Title={user.recently_played[4]?.title}
+                    playing5Artist={user.recently_played[4]?.artist}
+                    playing5Link={user.recently_played[4]?.link}
+                    song1={user.top_songs[0]}
+                    song2={user.top_songs[1]}
+                    song3={user.top_songs[2]}
+                    song4={user.top_songs[3]}
+                    song5={user.top_songs[4]}
+                    artist1={user.top_artists[0]}
+                    artist2={user.top_artists[1]}
+                    artist3={user.top_artists[2]}
+                    artist4={user.top_artists[3]}
+                    artist5={user.top_artists[4]}
+                />
+            </View>
+            <View style={{flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', width: '100%', position: 'absolute', bottom: 0, alignItems: 'center', backgroundColor: '#111111', height: 100}}>
+                {/* <TouchableOpacity>
+                    <Ionicons name="play-skip-back-outline" size={30} color="#ffffff" style={{marginHorizontal: 10}}/>
+                </TouchableOpacity> */}
+                <TouchableOpacity>
+                    <Ionicons name="heart-circle-outline" size={40} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleSkip}>
+                    <Ionicons name="play-skip-forward-outline" size={30} color="#ffffff" style={{marginHorizontal: 10}}/> 
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 };
