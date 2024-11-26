@@ -104,7 +104,7 @@ const Matches = () => {
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#111111' }}>
             <Stack.Screen
             options={{ 
-                headerShown: true,
+                headerShown: false,
                 headerTitle: "",
                 headerStyle: {
                     backgroundColor: '#111111',
@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
     //borderBottomWidth: 1,
     //borderColor: '#333',
     width: '100%',
+    marginBottom: 10,
     backgroundColor: '#111111',
   },
   switcherButton: {

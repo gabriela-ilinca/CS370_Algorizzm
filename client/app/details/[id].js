@@ -66,7 +66,17 @@ const Details = () => {
     if (loading || !user) {
         return (
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#111111' }}>
-                <ActivityIndicator size="large" color="#ffffff" />
+                <Stack.Screen
+                options={{ 
+                    headerShown: false,
+                    headerTitle: "",
+                    headerStyle: {
+                        backgroundColor: '#111111',
+                    },
+                    headerShadowVisible: false,
+                }}
+                />
+                <ActivityIndicator size="large" color="#FFF" />
             </SafeAreaView>
         );
     }

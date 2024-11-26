@@ -151,7 +151,7 @@ const Profile = () => {
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#111111' }}>
                 <Stack.Screen
                 options={{ 
-                    headerShown: true,
+                    headerShown: false,
                     headerTitle: "",
                     headerStyle: {
                         backgroundColor: '#111111',
