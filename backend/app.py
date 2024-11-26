@@ -2,6 +2,8 @@ from flask import Flask, request, redirect, session, jsonify
 from spotipy import SpotifyOAuth, Spotify
 from flask_cors import CORS
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -9,11 +11,12 @@ app.secret_key = os.urandom(24)  # Secure session management
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 # Spotify API credentials
-SPOTIPY_CLIENT_ID = "3e7a9df555334f2cbc1f21d815af85d2"
-SPOTIPY_CLIENT_SECRET = "443edc587b63402d81fef4fd5358534d"
-# SPOTIPY_REDIRECT_URI = "http://10.44.207.46:8080/callback"
-# testing:
-SPOTIPY_REDIRECT_URI = "http://10.0.0.47:8080/callback"
+
+
+SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
+SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
+SPOTIPY_REDIRECT_URI = os.getenv('SPOTIPY_REDIRECT_URI')
+
 
 # Set up Spotipy OAuth
 sp_oauth = SpotifyOAuth(

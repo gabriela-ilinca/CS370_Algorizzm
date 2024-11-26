@@ -16,8 +16,8 @@ const Signup1 = () => {
             // Linking.openURL('http://10.44.207.46:8080/login');
             // const response = await axios.get('http://10.44.207.46:8080/fetch_data');
             // testing:
-            Linking.openURL('http://10.0.0.47:8080/login');
-            const response = await axios.get('http://10.0.0.47:8080/fetch_data');
+            Linking.openURL('http://10.0.0.47:8080/login'); //change 10.0.0.47 to your own IP add; keep the :8080/login and the http format
+            const response = await axios.get('http://10.0.0.47:8080/fetch_data'); //change 10.0.0.47 to your own IP add; keep the :8080/login and the http format
             const { data } = response;
     
             // Once data is returned from the backend
