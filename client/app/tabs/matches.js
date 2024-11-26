@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, Text, ScrollView, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView, Text, ScrollView, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, Stack } from 'expo-router';
 import { getFirestore, doc, getDocs, collection, getDoc } from 'firebase/firestore';
@@ -16,34 +16,44 @@ const Matches = () => {
   const [iLiked, setILiked] = useState([]);    // Holds user UIDs that the current user liked
   const [userProfiles, setUserProfiles] = useState({}); // Holds the user profile data for liked and iLiked
   const [loading, setLoading] = useState(true); // For loading state
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchUserData();
+    setTimeout(() => { // can get rid of the setTimeout wrap 
+      setRefreshing(false);
+  }, 1000);
+  }, []);
 
   // Initialize Firebase services
   const db = getFirestore();
   const auth = getAuth();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const currentUser = auth.currentUser;
 
-      if (currentUser) {
-        try {
-          const userDocRef = doc(db, 'users', currentUser.uid);
-          const userDoc = await getDoc(userDocRef);
-          
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setLikedMe(userData.likedMe || []); // Assuming likedMe is an array of UIDs in Firestore
-            setILiked(userData.iLiked || []);   // Assuming iLiked is an array of UIDs in Firestore
-          } else {
-            console.log('No such document!');
-          }
-        } catch (error) {
-          console.error('Error getting user data: ', error);
+  const fetchUserData = async () => {
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      try {
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setLikedMe(userData.likedMe || []); // Assuming likedMe is an array of UIDs in Firestore
+          setILiked(userData.iLiked || []);   // Assuming iLiked is an array of UIDs in Firestore
+        } else {
+          console.log('No such document!');
         }
+      } catch (error) {
+        console.error('Error getting user data: ', error);
       }
-      setLoading(false);
-    };
-
+    }
+    setLoading(false);
+  };
+  
+  useEffect(() => {
     fetchUserData();
   }, []);
 
@@ -135,7 +145,9 @@ const Matches = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} 
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         {activeTab === 'liked me' ? (
           likedMe.map((uid) => {
             const user = userProfiles[uid];
