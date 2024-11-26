@@ -13,8 +13,11 @@ const Signup1 = () => {
     const handleSpotifySync = async () => {
         try {
             // Redirect to Flask backend for Spotify login
-            Linking.openURL('http://10.44.207.46:8080/login');
-            const response = await axios.get('http://10.44.207.46:8080/fetch_data');
+            // Linking.openURL('http://10.44.207.46:8080/login');
+            // const response = await axios.get('http://10.44.207.46:8080/fetch_data');
+            // testing:
+            Linking.openURL('http://10.0.0.47:8080/login');
+            const response = await axios.get('http://10.0.0.47:8080/fetch_data');
             const { data } = response;
     
             // Once data is returned from the backend

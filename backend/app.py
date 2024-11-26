@@ -11,7 +11,9 @@ app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 # Spotify API credentials
 SPOTIPY_CLIENT_ID = "3e7a9df555334f2cbc1f21d815af85d2"
 SPOTIPY_CLIENT_SECRET = "443edc587b63402d81fef4fd5358534d"
-SPOTIPY_REDIRECT_URI = "http://10.44.207.46:8080/callback"
+# SPOTIPY_REDIRECT_URI = "http://10.44.207.46:8080/callback"
+# testing:
+SPOTIPY_REDIRECT_URI = "http://10.0.0.47:8080/callback"
 
 # Set up Spotipy OAuth
 sp_oauth = SpotifyOAuth(
