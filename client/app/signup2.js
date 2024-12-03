@@ -1,34 +1,89 @@
-import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import React, { useState } from 'react';
+import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Firestore imports
+import { auth, storage, db } from '../config/firebase';
 
 const Signup2 = () => {    
     const router = useRouter();
     
-    // State to store selected images
     const [images, setImages] = useState([]);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadedUrls, setUploadedUrls] = useState([]);
 
-    const handlePress = () => {
-        router.push('/tabs')
-    }
+    // const auth = getAuth();
+    // const storage = getStorage();
+    // const db = getFirestore(); // Initialize Firestore
 
     const pickImages = async () => {
-        if (images.length >= 3) return; // Allow only 3 images
-        
+        if (images.length >= 3) return;
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsMultipleSelection: true,
-            selectionLimit: 3 - images.length, // Limit to 3 images
+            selectionLimit: 3 - images.length,
             aspect: [4, 3],
             quality: 1,
         });
 
         if (!result.canceled) {
-            setImages([...images, ...result.assets.map(asset => asset.uri)]); // Add selected images
+            setImages([...images, ...result.assets.map(asset => asset.uri)]);
         }
+    };
+
+    const uploadImage = async (uri, index) => {
+        try {
+            setIsUploading(true);
+
+            const response = await fetch(uri);
+            const blob = await response.blob();
+
+            const userId = auth.currentUser?.uid || "anonymous";
+            const storageRef = ref(storage, `profile_pictures/${userId}/${index + 1}.jpg`);
+
+            await uploadBytes(storageRef, blob);
+            const url = await getDownloadURL(storageRef);
+
+            setUploadedUrls(prev => [...prev, url]);
+            console.log(`Image ${index + 1} uploaded: ${url}`);
+        } catch (error) {
+            console.error("Error uploading image:", error);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const saveImageUrlsToFirestore = async () => {
+        const userId = auth.currentUser?.uid;
+
+        if (!userId) {
+            console.error("No user ID found. Make sure the user is authenticated.");
+            return;
+        }
+
+        try {
+            // Save image URLs to Firestore under the user's document
+            const userDocRef = doc(db, "users", userId);
+            await setDoc(userDocRef, { profilePictures: uploadedUrls }, { merge: true });
+            console.log("Image URLs saved to Firestore successfully!");
+        } catch (error) {
+            console.error("Error saving image URLs to Firestore:", error);
+        }
+    };
+
+    const handleUploadAll = async () => {
+        for (let i = 0; i < images.length; i++) {
+            await uploadImage(images[i], i);
+        }
+
+        // Save URLs to Firestore once all uploads are complete
+        await saveImageUrlsToFirestore();
+        router.push('/tabs'); // Navigate to the next screen
     };
 
     return (
@@ -53,7 +108,6 @@ const Signup2 = () => {
             </Text>
             <ScrollView contentContainerStyle={{ alignItems:'center', marginTop: 10, paddingBottom:350}}>
                 
-                {/* Display uploaded images or upload button */}
                 {images.length < 3 && (
                     <TouchableOpacity style={styles.upload} onPress={pickImages}>
                         <Feather name="upload" size={100} color="#999" />
@@ -63,7 +117,6 @@ const Signup2 = () => {
                     </TouchableOpacity>
                 )}
 
-                {/* Horizontal scroll view for images */}
                 {images.length > 0 && (
                     <ScrollView 
                         horizontal
@@ -81,9 +134,14 @@ const Signup2 = () => {
                     </ScrollView>
                 )}
 
-                {/* Next Button */}
+                {isUploading && <ActivityIndicator size="large" color="#FFF" style={{ marginVertical: 20 }} />}
+
                 <View style={{ flex:1, width:'100%', alignItems: 'center', marginTop: 30 }}>
-                    <TouchableOpacity onPress={handlePress} style={styles.next}>
+                    <TouchableOpacity 
+                        onPress={handleUploadAll} 
+                        style={[styles.next, isUploading && { backgroundColor: '#444' }]}
+                        disabled={isUploading || images.length === 0}
+                    >
                         <Text style={{ textAlign: "center", color: "#FFF" }}>Let's jam!</Text>
                     </TouchableOpacity>
                 </View>
