@@ -11,9 +11,12 @@ app.secret_key = os.urandom(24)  # Secure session management
 app.config['SESSION_COOKIE_NAME'] = 'spotify-login-session'
 
 # Spotify API credentials
+
+
 SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = os.getenv('SPOTIPY_REDIRECT_URI')
+
 
 # Set up Spotipy OAuth
 sp_oauth = SpotifyOAuth(
@@ -22,18 +25,6 @@ sp_oauth = SpotifyOAuth(
     redirect_uri=SPOTIPY_REDIRECT_URI,
     scope="user-read-recently-played user-top-read playlist-read-private"
 )
-
-def get_token():
-    """Retrieve token from session and ensure it's refreshed if expired."""
-    token_info = session.get('token_info', None)
-    if not token_info:
-        return None
-
-    # Check if the token is expired
-    if sp_oauth.is_token_expired(token_info):
-        token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-        session['token_info'] = token_info  # Update session with refreshed token
-    return token_info
 
 @app.route('/login')
 def login():
@@ -46,13 +37,13 @@ def callback():
     # Handle Spotify's response
     code = request.args.get('code')
     token_info = sp_oauth.get_access_token(code)
-    session['token_info'] = token_info  # Save token info in session
+    session['token_info'] = token_info
     return redirect('/fetch_data')
 
 @app.route('/fetch_data')
 def fetch_data():
     # Ensure token is valid
-    token_info = get_token()
+    token_info = sp_oauth.get_cached_token()
     if not token_info:
         return redirect('/login')
 
