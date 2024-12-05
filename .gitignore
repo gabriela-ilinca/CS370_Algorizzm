@@ -10,3 +10,4 @@ backend/.env
 client/.flask_session/8d7cdbd940f82275571eac9e15dc3a15
 client/.flask_session/2029240f6d1128be89ddc32729463129
 .cache
+config/firebase.js
