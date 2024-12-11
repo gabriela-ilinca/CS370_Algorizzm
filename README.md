@@ -29,3 +29,4 @@ Prerequisites:
 - Expo
 - React Native
 - Spotify Developer Account for API credentials
+- MongoDB
