@@ -9,14 +9,13 @@ Algorizzm is a unique dating app that connects people through their music tastes
 - User-friendly UI: Developed using React Native, Algorizzm provides an intuitive experience across platforms.
 - Cross-platform: Thanks to Expo, the app runs seamlessly on iOS and Android devices.
 State management: App state is handled using Redux for efficient global state handling.
-- Database: User profiles and interactions are stored securely in MongoDB.
+- Database: User profiles and interactions are stored securely in Firebase.
 
   
 #Tech Stack
 ## Frontend:
 - React Native: For building the cross-platform mobile user interface.
 - Expo: For routing and deployment across iOS and Android platforms.
-- Redux: For managing global states across the app.
 ## Backend:
 - Spotify API (Spotipy): For retrieving user data from Spotify, such as favorite songs, playlists, and top artists.
 - FireBase: For storing user profiles, preferences, and match data.
@@ -27,5 +26,7 @@ State management: App state is handled using Redux for efficient global state ha
 Prerequisites:
 - Node.js & npm
 - Python 3.x
-- MongoDB
+- Firebase
+- Expo
+- React Native
 - Spotify Developer Account for API credentials
