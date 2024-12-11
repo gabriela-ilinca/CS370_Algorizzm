@@ -7,7 +7,6 @@ Harmonize is a unique dating app that connects people through their music tastes
 - Music-based profiles: Users can connect their Spotify account to display their favorite music, artists, and playlists.
 - User-friendly UI: Developed using React Native, Algorizzm provides an intuitive experience across platforms.
 - Cross-platform: Thanks to Expo, the app runs seamlessly on iOS and Android devices.
-State management: App state is handled using Redux for efficient global state handling.
 - Database: User profiles and interactions are stored securely in Firebase.
 
   
